@@ -11,6 +11,7 @@ const app = express();
 connectDB();
 
 app.use(express.json());
+app.use(express.static('frontend'));
 
 // JWT 인증 미들웨어
 const authMiddleware = async (req, res, next) => {
@@ -330,6 +331,11 @@ app.get('/api/search', async (req, res) => {
     // 서버 오류 발생 시 500 상태 코드와 오류 메시지를 응답합니다.
     res.status(500).json({ message: error.message });
   }
+});
+
+// Google Maps API 키를 클라이언트에 제공하는 엔드포인트
+app.get('/api/maps-key', (req, res) => {
+  res.json({ apiKey: process.env.GOOGLE_MAPS_API_KEY });
 });
 
 

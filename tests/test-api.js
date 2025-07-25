@@ -20,34 +20,41 @@ async function testApi() {
   try {
     // --- 1. 회원가입 테스트 ---
     console.log('\n--- 1. 회원가입 테스트 ---');
+
     const registerRes = await fetch(`${BASE_URL}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(testUser)
     });
+
     console.log(`Status: ${registerRes.status}`);
     console.log(`Body: ${await registerRes.text()}`);
 
     // --- 2. 로그인 테스트 ---
     console.log('\n--- 2. 로그인 테스트 ---');
+
     const loginRes = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: testUser.email, password: testUser.password })
     });
+
     const loginBody = await loginRes.json();
     authToken = loginBody.token; // 발급받은 토큰 저장
+
     console.log(`Status: ${loginRes.status}`);
     console.log(`Token: ${authToken}`);
 
     // --- 3. 식당 등록 테스트 ---
     console.log('\n--- 3. 식당 등록 테스트 ---');
+    
     const restaurantData = {
       name: '테스트 식당',
       address: '서울시 강남구 테스트로 123',
       location: { type: 'Point', coordinates: [127.0276, 37.4979] }, // 강남역 좌표
       category: '한식'
     };
+    
     const createRestaurantRes = await fetch(`${BASE_URL}/restaurants`, {
       method: 'POST',
       headers: {

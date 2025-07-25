@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Restaurant</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h1>Add a New Restaurant</h1>
+    <form action="/api/restaurants" method="POST">
+        <input type="text" name="name" placeholder="Restaurant Name" required>
+        <input type="text" name="address" placeholder="Address" required>
+        <input type="text" name="cuisine" placeholder="Cuisine Type" required>
+        <button type="submit">Add Restaurant</button>
+    </form>
+</body>
+</html>

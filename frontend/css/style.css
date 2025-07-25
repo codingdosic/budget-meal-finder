@@ -1,0 +1,36 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+input, button {
+    margin-bottom: 10px;
+    padding: 8px;
+}
+
+/* Map styles */
+#map {
+    height: 500px; /* 지도의 높이를 지정 */
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+header {
+    margin-bottom: 20px;
+}
