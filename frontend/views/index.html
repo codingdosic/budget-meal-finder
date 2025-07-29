@@ -9,16 +9,45 @@
 <body>
     <header>
         <h1>Budget Meal Finder</h1>
-        <div id="settings-info">
-            <p>현재 예산: <span id="current-budget">-</span>원</p>
-            <a href="/views/settings.html">설정 변경</a>
+        <button id="my-location-btn">내 위치로 이동하기</button>
+        <div class="budget-control">
+            <input type="number" id="budget-input-main" placeholder="예산 입력">
+            <button id="set-budget-btn">예산 설정</button>
         </div>
         <button id="add-marker-btn">마커 추가</button>
     </header>
 
     <main>
-        <div id="map"></div>
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
+        <div id="sidebar">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="메뉴 검색...">
+                <button id="search-button">검색</button>
+                <button id="clear-search-button">X</button>
+            </div>
+            <div id="marker-list">
+                <!-- 마커 리스트가 여기에 동적으로 로드됩니다 -->
+            </div>
+        </div>
     </main>
+
+    <div id="marker-dialog" class="dialog-overlay">
+        <div class="dialog-content">
+            <h2>새 메뉴 추가</h2>
+            <label for="dialog-title">제목 (식당 이름):</label>
+            <input type="text" id="dialog-title" required>
+            <label for="dialog-description">내용 (메뉴 설명):</label>
+            <textarea id="dialog-description"></textarea>
+            <label for="dialog-price">가격:</label>
+            <input type="number" id="dialog-price" required>
+            <div class="dialog-buttons">
+                <button id="dialog-submit">추가</button>
+                <button id="dialog-cancel">취소</button>
+            </div>
+        </div>
+    </div>
 
     <script src="/js/main.js"></script>
     <!-- Google Maps 스크립트는 main.js에서 동적으로 추가됩니다. -->

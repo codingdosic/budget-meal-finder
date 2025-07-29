@@ -1,6 +1,193 @@
 body {
     font-family: sans-serif;
-    margin: 20px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+#settings-info {
+    display: flex;
+    align-items: center;
+}
+
+#settings-info p {
+    margin: 0 15px 0 0;
+    font-size: 14px;
+}
+
+#settings-info a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 10px; 
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+main {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+    gap: 20px;
+}
+
+#map-container {
+    flex: 3; /* 지도가 3/4 공간 차지 */
+    height: calc(100vh - 150px); /* 헤더 높이 및 main 패딩 고려 */
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+#sidebar {
+    flex: 1; /* 사이드바가 1/4 공간 차지 */
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #fff;
+    min-height: 0; /* 추가: flex 아이템의 최소 높이 설정 */
+    height: calc(100vh - 150px); /* map-container와 동일한 높이 설정 */
+}
+
+.search-container {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+#search-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+}
+
+#search-button {
+    border-radius: 0 4px 4px 0;
+}
+
+#marker-list {
+    flex: 1;
+    overflow-y: auto;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.marker-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex; /* Flexbox를 사용하여 내부 요소 정렬 */
+    justify-content: space-between; /* 정보와 버튼을 양 끝으로 분리 */
+    align-items: flex-start; /* 상단 정렬 */
+    position: relative; /* 자식 요소의 absolute 포지셔닝을 위한 기준 */
+}
+
+.marker-info {
+    flex-grow: 1; /* 정보 영역이 가능한 많은 공간을 차지 */
+}
+
+.marker-actions {
+    display: flex;
+    gap: 5px; /* 버튼 사이 간격 */
+    position: absolute; /* 우상단에 배치 */
+    top: 5px;
+    right: 5px;
+}
+
+.marker-actions button {
+    padding: 4px 8px; /* 버튼 크기 줄이기 */
+    font-size: 12px; /* 폰트 크기 줄이기 */
+    margin: 0; /* 기본 마진 제거 */
+}
+
+.edit-btn {
+    background-color: #ffc107; /* 수정 버튼 색상 */
+    color: #333;
+}
+
+.edit-btn:hover {
+    background-color: #e0a800;
+}
+
+.delete-btn {
+    background-color: #dc3545; /* 삭제 버튼 색상 */
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.marker-item:last-child {
+    border-bottom: none;
+}
+
+.marker-item:hover {
+    background-color: #f0f0f0;
+}
+
+.marker-item h4 {
+    margin: 0 0 5px 0;
+    color: #333;
+}
+
+.marker-item p {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+/* Form styles (for login/register/settings) */
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #fff;
+}
+
+input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
 nav ul {
@@ -13,24 +200,98 @@ nav ul li {
     margin-right: 10px;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-}
-
-input, button {
-    margin-bottom: 10px;
-    padding: 8px;
-}
-
-/* Map styles */
-#map {
-    height: 500px; /* 지도의 높이를 지정 */
+/* Dialog styles */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    border: 1px solid #ccc;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s;
 }
 
-header {
+.dialog-overlay.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.dialog-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+}
+
+.dialog-content h2 {
+    margin-top: 0;
     margin-bottom: 20px;
+    color: #333;
+}
+
+.dialog-content label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.dialog-content input[type="text"],
+.dialog-content input[type="number"],
+.dialog-content textarea {
+    width: calc(100% - 22px); /* padding + border */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.dialog-content textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.dialog-buttons button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#dialog-submit {
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+
+#dialog-submit:hover {
+    background-color: #218838;
+}
+
+#dialog-cancel {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+#dialog-cancel:hover {
+    background-color: #c82333;
 }

@@ -15,6 +15,9 @@ const menuSchema = new mongoose.Schema({
 
   // 설명
   description: String,
+
+  // 유저 이름
+  username: { type: String, required: true },
 });
 
 module.exports = mongoose.model('Menu', menuSchema);
