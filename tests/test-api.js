@@ -33,7 +33,7 @@ async function testApi() {
     // --- 2. 로그인 테스트 ---
     console.log('\n--- 2. 로그인 테스트 ---');
 
-    const loginRes = await fetch(`${BASE_URL}/login`, {
+    const loginRes = await fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: testUser.email, password: testUser.password })

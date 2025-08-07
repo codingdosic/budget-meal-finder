@@ -140,3 +140,5 @@ vite.config.ts.timestamp-*
 
 # Gemini related files
 GEMINI.md
+
+docs/

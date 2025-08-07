@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -17,15 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ email, password })
             });
 
-            const data = await response.json();
+            const { success, data, error } = await response.json();
 
-            if (response.ok) {
+            if (success) {
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('username', data.username); // Add this line
+                localStorage.setItem('username', data.username);
                 window.location.href = '/views/index.html';
             } else {
-                alert(data.message);
-                if (confirm('Would you like to register?')) {
+                alert(error.message);
+                if (confirm('회원가입 하시겠습니까?')) {
                     window.location.href = '/views/register.html';
                 }
             }

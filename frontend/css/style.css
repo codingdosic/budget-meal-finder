@@ -51,6 +51,14 @@ button:hover {
     background-color: #0056b3;
 }
 
+#logout-btn {
+    background-color: #6c757d; /* 회색 계열 */
+}
+
+#logout-btn:hover {
+    background-color: #5a6268;
+}
+
 main {
     display: flex;
     flex: 1;
@@ -98,6 +106,26 @@ main {
     border-radius: 0 4px 4px 0;
 }
 
+#advanced-search-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#advanced-search-container select,
+#advanced-search-container input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+#advanced-search-container button {
+    flex-grow: 1;
+    margin: 0;
+}
+
 #marker-list {
     flex: 1;
     overflow-y: auto;
@@ -109,14 +137,33 @@ main {
     padding: 10px;
     border-bottom: 1px solid #eee;
     cursor: pointer;
-    display: flex; /* Flexbox를 사용하여 내부 요소 정렬 */
-    justify-content: space-between; /* 정보와 버튼을 양 끝으로 분리 */
-    align-items: flex-start; /* 상단 정렬 */
-    position: relative; /* 자식 요소의 absolute 포지셔닝을 위한 기준 */
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    position: relative;
+}
+
+.marker-item-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background-color: #f0f0f0; /* 이미지 없을 때 배경색 */
 }
 
 .marker-info {
-    flex-grow: 1; /* 정보 영역이 가능한 많은 공간을 차지 */
+    flex-grow: 1;
+    overflow: hidden; /* ellipsis를 위해 필요 */
+}
+
+.marker-item-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
 }
 
 .marker-actions {
@@ -168,6 +215,60 @@ main {
     margin: 0;
     font-size: 13px;
     color: #666;
+}
+
+.marker-item .price {
+    font-weight: bold;
+    color: #000;
+}
+
+.marker-item .restaurant {
+    color: #888;
+}
+
+.recommend-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.recommend-actions button {
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.recommend-actions button:hover {
+    background-color: #f0f0f0;
+}
+
+.recommend-actions button.recommended {
+    background-color: #28a745; /* Green for recommended */
+    color: white;
+    border-color: #28a745;
+}
+
+.recommend-actions button.disrecommended {
+    background-color: #dc3545; /* Red for disrecommended */
+    color: white;
+    border-color: #dc3545;
+}
+
+.recommend-count,
+.disrecommend-count {
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
 }
 
 /* Form styles (for login/register/settings) */
@@ -248,7 +349,8 @@ nav ul li {
 
 .dialog-content input[type="text"],
 .dialog-content input[type="number"],
-.dialog-content textarea {
+.dialog-content textarea,
+.dialog-content select {
     width: calc(100% - 22px); /* padding + border */
     padding: 10px;
     margin-bottom: 15px;
@@ -294,4 +396,46 @@ nav ul li {
 
 #dialog-cancel:hover {
     background-color: #c82333;
+}
+
+/* InfoWindow Custom Styles */
+.infowindow-content {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.infowindow-image {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 12px;
+}
+
+.infowindow-details {
+    padding: 5px;
+}
+
+.infowindow-title {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.infowindow-text {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.infowindow-text strong {
+    color: #111;
+}
+
+.infowindow-meta {
+    font-size: 12px;
+    color: #888;
+    margin-top: 10px;
 }

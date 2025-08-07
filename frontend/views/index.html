@@ -15,6 +15,7 @@
             <button id="set-budget-btn">예산 설정</button>
         </div>
         <button id="add-marker-btn">마커 추가</button>
+        <button id="logout-btn">로그아웃</button>
     </header>
 
     <main>
@@ -27,9 +28,28 @@
                 <button id="search-button">검색</button>
                 <button id="clear-search-button">X</button>
             </div>
-            <div id="marker-list">
-                <!-- 마커 리스트가 여기에 동적으로 로드됩니다 -->
+            <div id="advanced-search-container">
+                <select id="category-select">
+                    <option value="">-- 카테고리 --</option>
+                    <option value="한식">한식</option>
+                    <option value="중식">중식</option>
+                    <option value="일식">일식</option>
+                    <option value="양식">양식</option>
+                    <option value="분식">분식</option>
+                    <option value="패스트푸드">패스트푸드</option>
+                    <option value="카페">카페/디저트</option>
+                    <option value="기타">기타</option>
+                </select>
+                <input type="number" id="max-price-input" placeholder="최대 가격">
+                <select id="sort-by-select">
+                    <option value="createdAt">최신순</option>
+                    <option value="recommendations">추천순</option>
+                    <option value="price">낮은 가격순</option>
+                </select>
+                <button id="advanced-search-button">필터 적용</button>
+                <button id="reset-filters-button">초기화</button>
             </div>
+            <div id="marker-list"></div>
         </div>
     </main>
 
@@ -42,6 +62,20 @@
             <textarea id="dialog-description"></textarea>
             <label for="dialog-price">가격:</label>
             <input type="number" id="dialog-price" required>
+            <label for="dialog-category">카테고리:</label>
+            <select id="dialog-category">
+                <option value="한식">한식</option>
+                <option value="중식">중식</option>
+                <option value="일식">일식</option>
+                <option value="양식">양식</option>
+                <option value="분식">분식</option>
+                <option value="패스트푸드">패스트푸드</option>
+                <option value="카페">카페/디저트</option>
+                <option value="기타" selected>기타</option>
+            </select>
+            <label for="dialog-image">이미지:</label>
+            <input type="file" id="dialog-image" accept="image/*">
+            <div id="image-preview-container"></div>
             <div class="dialog-buttons">
                 <button id="dialog-submit">추가</button>
                 <button id="dialog-cancel">취소</button>
@@ -49,7 +83,7 @@
         </div>
     </div>
 
-    <script src="/js/main.js"></script>
-    <!-- Google Maps 스크립트는 main.js에서 동적으로 추가됩니다. -->
+    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+    <script src="../js/main.js"></script>
 </body>
 </html>
