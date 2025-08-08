@@ -142,3 +142,6 @@ vite.config.ts.timestamp-*
 GEMINI.md
 
 docs/
+
+# Uploaded files
+uploads/

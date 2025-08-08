@@ -18,10 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('search-button');
     const clearSearchButton = document.getElementById('clear-search-button');
     const categorySelect = document.getElementById('category-select');
-    const maxPriceInput = document.getElementById('max-price-input');
     const sortBySelect = document.getElementById('sort-by-select');
-    const advancedSearchButton = document.getElementById('advanced-search-button');
-    const resetFiltersButton = document.getElementById('reset-filters-button');
+    const maxPriceInput = document.getElementById('max-price-input');
     const addMarkerButton = document.getElementById('add-marker-btn');
     const logoutBtn = document.getElementById('logout-btn');
     const myLocationBtn = document.getElementById('my-location-btn');
@@ -205,6 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ? `<img class="marker-item-image" src="${menu.imageUrl}" alt="${menu.name}">` 
             : '<div class="marker-item-image"></div>';
 
+        const date = new Date(menu.createdAt).toLocaleDateString();
+
         item.innerHTML = `
             ${imageHtml}
             <div class="marker-info">
@@ -212,10 +212,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="price">${menu.price.toLocaleString()}원</p>
                 <p class="marker-item-description">${menu.description || '설명 없음'}</p>
                 <div class="recommend-actions">
-                    <button class="recommend-btn ${isRecommended ? 'recommended' : ''}" data-action="recommend">👍</button>
-                    <span class="recommend-count">${menu.recommendations}</span>
-                    <button class="disrecommend-btn ${isDisrecommended ? 'disrecommended' : ''}" data-action="disrecommend">👎</button>
-                    <span class="disrecommend-count">${menu.disrecommendations}</span>
+                    <div class="recommend-buttons">
+                        <button class="recommend-btn ${isRecommended ? 'recommended' : ''}" data-action="recommend">👍</button>
+                        <span class="recommend-count">${menu.recommendations}</span>
+                        <button class="disrecommend-btn ${isDisrecommended ? 'disrecommended' : ''}" data-action="disrecommend">👎</button>
+                        <span class="disrecommend-count">${menu.disrecommendations}</span>
+                    </div>
+                    <p class="marker-item-date">${date}</p>
                 </div>
             </div>
             ${menu.username === currentUser.username ? `
@@ -285,8 +288,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = new URLSearchParams({
             keyword: searchInput.value,
             category: categorySelect.value,
-            maxPrice: maxPriceInput.value,
-            sortBy: sortBySelect.value
+            sortBy: sortBySelect.value,
+            maxPrice: maxPriceInput.value
         }).toString();
 
         try {
@@ -437,16 +440,14 @@ document.addEventListener('DOMContentLoaded', () => {
         searchButton.addEventListener('click', applyAdvancedSearch);
         clearSearchButton.addEventListener('click', () => {
             searchInput.value = '';
+            categorySelect.value = '';
+            sortBySelect.value = 'createdAt';
+            maxPriceInput.value = '';
             applyAdvancedSearch();
         });
-        advancedSearchButton.addEventListener('click', applyAdvancedSearch);
-        resetFiltersButton.addEventListener('click', () => {
-            searchInput.value = '';
-            categorySelect.value = '';
-            maxPriceInput.value = '';
-            sortBySelect.value = 'createdAt';
-            fetchAllMenus();
-        });
+        categorySelect.addEventListener('change', applyAdvancedSearch);
+        sortBySelect.addEventListener('change', applyAdvancedSearch);
+        maxPriceInput.addEventListener('input', applyAdvancedSearch);
 
         addMarkerButton.addEventListener('click', () => {
             alert('지도를 클릭하여 새 메뉴를 추가할 위치를 선택하세요.');

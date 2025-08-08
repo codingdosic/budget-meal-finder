@@ -21,6 +21,11 @@ header h1 {
     font-size: 24px;
 }
 
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
 #settings-info {
     display: flex;
     align-items: center;
@@ -166,6 +171,12 @@ main {
     margin-top: 4px;
 }
 
+.marker-item-date {
+    font-size: 11px;
+    color: #999;
+    margin-left: 10px;
+}
+
 .marker-actions {
     display: flex;
     gap: 5px; /* 버튼 사이 간격 */
@@ -231,6 +242,7 @@ main {
     align-items: center;
     gap: 5px;
     margin-top: 10px;
+    justify-content: space-between;
 }
 
 .recommend-actions button {
@@ -269,6 +281,12 @@ main {
     font-weight: bold;
     min-width: 20px;
     text-align: center;
+}
+
+.recommend-buttons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 /* Form styles (for login/register/settings) */

@@ -9,13 +9,11 @@
 <body>
     <header>
         <h1>Budget Meal Finder</h1>
-        <button id="my-location-btn">내 위치로 이동하기</button>
-        <div class="budget-control">
-            <input type="number" id="budget-input-main" placeholder="예산 입력">
-            <button id="set-budget-btn">예산 설정</button>
+        <div class="header-buttons">
+            <button id="my-location-btn">내 위치로 이동하기</button>
+            <button id="add-marker-btn">마커 추가</button>
+            <button id="logout-btn">로그아웃</button>
         </div>
-        <button id="add-marker-btn">마커 추가</button>
-        <button id="logout-btn">로그아웃</button>
     </header>
 
     <main>
@@ -40,14 +38,12 @@
                     <option value="카페">카페/디저트</option>
                     <option value="기타">기타</option>
                 </select>
-                <input type="number" id="max-price-input" placeholder="최대 가격">
                 <select id="sort-by-select">
                     <option value="createdAt">최신순</option>
                     <option value="recommendations">추천순</option>
                     <option value="price">낮은 가격순</option>
                 </select>
-                <button id="advanced-search-button">필터 적용</button>
-                <button id="reset-filters-button">초기화</button>
+                <input type="number" id="max-price-input" placeholder="최대 가격">
             </div>
             <div id="marker-list"></div>
         </div>
