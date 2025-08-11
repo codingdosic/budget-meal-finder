@@ -14,6 +14,7 @@ const restaurantRoutes = require('./routes/restaurantRoutes');
 const menuRoutes = require('./routes/menuRoutes');
 const miscRoutes = require('./routes/miscRoutes');
 const searchRoutes = require('./routes/searchRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -47,23 +48,9 @@ app.use('/api/menus', menuRoutes);
 // 기타 기능 라우트: /api/search, /api/maps-key 등
 app.use('/api', miscRoutes);
 app.use('/api', searchRoutes);
+app.use('/api/user', userRoutes);
 
-// 인증 미들웨어 불러오기
-const authMiddleware = require('./middleware/authMiddleware');
-const User = require('../models/User'); // User 모델 불러오기
 const errorHandler = require('./middleware/errorHandler');
-const { sendSuccess } = require('./utils/responseHandler');
-const asyncHandler = require('./utils/asyncHandler');
-const ApiError = require('./errors/ApiError');
-
-// 로그인된 사용자 정보 반환 API (인증 필요)
-app.get('/api/user', authMiddleware, asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.userId).select('-password');
-  if (!user) {
-    throw new ApiError(404, 'User not found');
-  }
-  sendSuccess(res, user);
-}));
 
 // 중앙 에러 처리 미들웨어
 app.use(errorHandler);

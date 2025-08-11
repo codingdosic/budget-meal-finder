@@ -31,6 +31,10 @@ class MenuRepository {
   async searchMenus(query, sortOptions) {
     return await Menu.find(query).sort(sortOptions).populate('restaurantId');
   }
+
+  async findMenusByUsername(username) {
+    return await Menu.find({ username }).populate('restaurantId');
+  }
 }
 
 module.exports = new MenuRepository();

@@ -36,9 +36,9 @@ const authMiddleware = async (req, res, next) => {
     next();
 
   } catch (error) {
-    // 토큰이 유효하지 않으면 클라이언트에 오류 반환 (400 Bad Request)
-    res.status(400).send('Invalid token.');
-  }
+        console.error('JWT Verification Error:', error.message);
+        res.status(400).json({ error: { message: `Invalid token: ${error.message}` } });
+    }
 };
 
 // 미들웨어를 외부에서 사용할 수 있도록 모듈로 내보냄

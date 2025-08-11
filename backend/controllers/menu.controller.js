@@ -6,13 +6,18 @@ const { sendSuccess } = require('../utils/responseHandler');
 const multer = require('multer');
 const path = require('path');
 
+// 파일 업로드 설정
 const storage = multer.diskStorage({
+  // 파일 저장 위치
   destination: (req, file, cb) => cb(null, 'uploads/'),
+  // 파일 이름 
   filename: (req, file, cb) => cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
 });
+// multer 인스턴스 생성
 const upload = multer({ storage });
 
 class MenuController {
+  // multer 미들웨어를 사용하여 이미지 업로드 처리
   constructor() {
     this.upload = upload.single('image');
   }
@@ -67,6 +72,11 @@ class MenuController {
 
   advancedSearch = asyncHandler(async (req, res) => {
     const menus = await MenuService.advancedSearch(req.query);
+    sendSuccess(res, menus);
+  });
+
+  getMenusByCurrentUser = asyncHandler(async (req, res) => {
+    const menus = await MenuService.getMenusByUsername(req.user.username);
     sendSuccess(res, menus);
   });
 }

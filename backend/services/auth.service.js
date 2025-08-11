@@ -5,6 +5,8 @@ const ApiError = require('../errors/ApiError');
 const jwt = require('jsonwebtoken');
 
 class AuthService {
+
+  // 프로미스 반환하는 비동기 함수
   async register(userData) {
     // 이메일 중복 체크
     const existingUser = await UserRepository.findUserByEmail(userData.email);

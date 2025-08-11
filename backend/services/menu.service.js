@@ -148,6 +148,11 @@ class MenuService {
     return menus.map(this.formatMenu);
   }
 
+  async getMenusByUsername(username) {
+    const menus = await MenuRepository.findMenusByUsername(username);
+    return menus.map(this.formatMenu);
+  }
+
   formatMenu(menu) {
     return {
       _id: menu._id,

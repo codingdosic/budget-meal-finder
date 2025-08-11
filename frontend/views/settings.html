@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 설정 - Budget Meal Finder</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/settings.css">
+</head>
+<body>
+    <header>
+        <h1><a href="/">Budget Meal Finder</a></h1>
+        <div class="header-buttons">
+            <button id="back-to-map-btn">지도로 돌아가기</button>
+        </div>
+    </header>
+
+    <main class="settings-container">
+        <h2>사용자 설정</h2>
+
+        <section id="account-management">
+            <h3>계정 관리</h3>
+            <div class="form-group">
+                <label for="username">사용자 이름</label>
+                <input type="text" id="username" disabled>
+            </div>
+            <div class="form-group">
+                <label for="email">이메일 주소</label>
+                <input type="email" id="email" disabled>
+                <button id="edit-email-btn">변경</button>
+            </div>
+            <div class="form-group">
+                <label for="current-password">현재 비밀번호</label>
+                <input type="password" id="current-password">
+            </div>
+            <div class="form-group">
+                <label for="new-password">새 비밀번호</label>
+                <input type="password" id="new-password">
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">새 비밀번호 확인</label>
+                <input type="password" id="confirm-password">
+            </div>
+            <button id="change-password-btn" class="btn-primary">비밀번호 변경</button>
+            <hr>
+            <button id="delete-account-btn" class="btn-danger">계정 삭제</button>
+        </section>
+
+        <section id="my-content">
+            <h3>내가 등록한 메뉴</h3>
+            <div id="my-menus-list"></div>
+        </section>
+
+    </main>
+
+    <script type="module" src="/js/settings.js"></script>
+</body>
+</html>

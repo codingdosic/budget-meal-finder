@@ -11,14 +11,17 @@ router.get('/advanced-search', MenuController.advancedSearch);
 // [GET] 모든 메뉴 조회
 router.get('/all-menus', MenuController.getAllMenus);
 
+// [GET] 내가 작성한 메뉴 조회
+router.get('/my-menus', authMiddleware, MenuController.getMenusByCurrentUser);
+
 // [POST] 특정 식당에 메뉴 추가
 router.post('/:restaurantId/menus', authMiddleware, MenuController.upload, MenuController.createMenuForRestaurant);
 
-// [POST] 지도에서 마커 추가 시 메뉴 생성
-router.post('/', authMiddleware, MenuController.upload, MenuController.createMenuWithNewRestaurant);
-
 // [GET] 특정 식당의 메뉴 목록 조회
 router.get('/:restaurantId/menus', MenuController.getMenusByRestaurant);
+
+// [POST] 지도에서 마커 추가 시 메뉴 생성
+router.post('/', authMiddleware, MenuController.upload, MenuController.createMenuWithNewRestaurant);
 
 // [PUT] 특정 메뉴 정보 수정
 router.put('/:id', authMiddleware, MenuController.upload, MenuController.updateMenu);
