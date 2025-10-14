@@ -2,6 +2,7 @@
 import * as api from './api.js';
 import * as mapModule from './map.js';
 import * as uiModule from './ui.js';
+import { showDialog } from './dialog.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 전역 변수 선언
@@ -56,12 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateMapAndList(menus) {
         mapModule.updateMap(menus, !ui.searchInput.value); // 검색창이 비어있을 때만 bounds.fit
 
-        uiModule.renderMenuList(menus, currentUser, {
-            onRecommend: handleRecommendation,
-            onDelete: deleteMenu,
-            onEdit: openEditMenuDialog,
-            onMarkerClick: mapModule.panToMarker
-        });
+        uiModule.renderMenuList(menus, currentUser);
     }
 
     // 추천/비추천 처리
@@ -71,19 +67,25 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetchUserData();
             await fetchAllMenus();
         } catch (error) {
-            alert(error.message);
+            showDialog({ message: error.message, title: '오류' });
         }
     }
     
     // 메뉴 삭제
     async function deleteMenu(menuId) {
-        if (!confirm('정말로 이 메뉴를 삭제하시겠습니까?')) return;
-        try {
-            await api.deleteMenu(menuId, localStorage.getItem('token'));
-            await fetchAllMenus();
-        } catch (error) {
-            alert(error.message);
-        }
+        showDialog({
+            message: '정말로 이 메뉴를 삭제하시겠습니까?',
+            title: '메뉴 삭제 확인',
+            showCancelButton: true,
+            onConfirm: async () => {
+                try {
+                    await api.deleteMenu(menuId, localStorage.getItem('token'));
+                    await fetchAllMenus();
+                } catch (error) {
+                    showDialog({ message: error.message, title: '오류' });
+                }
+            }
+        });
     }
 
     // 고급 검색
@@ -167,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await fetchAllMenus();
             } else {
                 const errorData = await response.json();
-                alert(`저장 실패: ${errorData.error.message}`);
+                showDialog({ message: `저장 실패: ${errorData.error.message}`, title: '저장 오류' });
             }
         } catch (error) {
             console.error('Error submitting menu:', error);
@@ -189,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.maxPriceInput.addEventListener('input', applyAdvancedSearch);
 
         ui.addMarkerButton.addEventListener('click', () => {
-            alert('지도를 클릭하여 새 메뉴를 추가할 위치를 선택하세요.');
+            showDialog({ message: '지도를 클릭하여 새 메뉴를 추가할 위치를 선택하세요.', title: '메뉴 추가', autoClose: true, duration: 3000 });
             mapModule.addMapClickListener((latLng) => {
                 openAddMenuDialog(latLng);
             });
@@ -219,6 +221,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ui.myLocationBtn.addEventListener('click', () => {
             mapModule.showMyLocation();
+        });
+
+        // Event Delegation for marker list
+        ui.markerList.addEventListener('click', (e) => {
+            const target = e.target;
+            const actionElement = target.closest('[data-action]');
+            if (!actionElement) return;
+
+            const action = actionElement.dataset.action;
+            const menuId = actionElement.dataset.id;
+
+            switch (action) {
+                case 'pan':
+                    const parentItem = actionElement.closest('.marker-item');
+                    mapModule.panToMarker(parentItem.dataset.menuId);
+                    break;
+                case 'recommend':
+                case 'disrecommend':
+                    handleRecommendation(menuId, action);
+                    break;
+                case 'edit':
+                    const menuToEdit = allMenus.find(menu => menu._id === menuId);
+                    if (menuToEdit) openEditMenuDialog(menuToEdit);
+                    break;
+                case 'delete':
+                    deleteMenu(menuId);
+                    break;
+            }
         });
     }
 

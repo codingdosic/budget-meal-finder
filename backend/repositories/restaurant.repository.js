@@ -22,6 +22,11 @@ class RestaurantRepository {
   async aggregate(pipeline) {
     return await Restaurant.aggregate(pipeline);
   }
+
+  // 생성자 ID로 식당 삭제
+  async deleteRestaurantsByCreatedBy(userId) {
+    return await Restaurant.deleteMany({ createdBy: userId });
+  }
 }
 
 module.exports = new RestaurantRepository();

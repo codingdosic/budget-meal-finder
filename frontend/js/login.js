@@ -1,3 +1,5 @@
+import { showDialog } from './dialog.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const registerBtn = document.getElementById('register-btn');
@@ -24,14 +26,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('username', data.username);
                 window.location.href = '/views/index.html';
             } else {
-                alert(error.message);
-                if (confirm('회원가입 하시겠습니까?')) {
-                    window.location.href = '/views/register.html';
-                }
+                showDialog({
+                    message: error.message,
+                    title: '로그인 실패',
+                    showCancelButton: true,
+                    onConfirm: () => {
+                        window.location.href = '/views/register.html';
+                    },
+                    onCancel: () => {
+                        // Do nothing
+                    }
+                });
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            showDialog({
+                message: '알 수 없는 오류가 발생했습니다. 다시 시도해주세요.',
+                title: '오류'
+            });
         }
     });
 

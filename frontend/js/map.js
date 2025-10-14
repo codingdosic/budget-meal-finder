@@ -1,5 +1,6 @@
 // frontend/js/map.js
 import * as api from './api.js';
+import { showDialog } from './dialog.js';
 
 let map;
 let infoWindow;
@@ -51,7 +52,7 @@ export function initMap(onMapLoadCallback) {
         })
         .catch(error => {
             console.error('Failed to load Google Maps:', error);
-            alert('지도를 불러오는 데 실패했습니다.');
+            showDialog({ message: '지도를 불러오는 데 실패했습니다.', title: '지도 오류' });
         });
 }
 
@@ -138,9 +139,9 @@ export function showMyLocation() {
                     strokeWeight: 2,
                 },
             });
-        }, () => alert('위치 정보를 가져올 수 없습니다.'));
+        }, () => showDialog({ message: '위치 정보를 가져올 수 없습니다.', title: '위치 오류' }));
     } else {
-        alert('이 브라우저에서는 위치 정보가 지원되지 않습니다.');
+        showDialog({ message: '이 브라우저에서는 위치 정보가 지원되지 않습니다.', title: '위치 오류' });
     }
 }
 

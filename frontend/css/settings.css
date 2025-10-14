@@ -7,16 +7,74 @@
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex; /* Flex 컨테이너로 설정 */
+    gap: 40px; /* 섹션 간 간격 */
+    align-items: flex-start; /* 상단 정렬 */
+}
+
+#my-menus-list {
+    max-height: 490px; /* 고정 높이 */
+    overflow-y: auto; /* 스크롤 가능 */
 }
 
 .settings-container h2 {
     text-align: center;
     margin-bottom: 2rem;
     color: #333;
+    width: 100%; /* 제목이 전체 너비를 차지하도록 */
 }
 
 .settings-container section {
-    margin-bottom: 2.5rem;
+    margin-bottom: 0; /* Flex 아이템이므로 마진 조정 */
+    flex: 1; /* 공간을 균등하게 분배 */
+}
+
+.settings-container section:last-child {
+    margin-bottom: 0; /* 마지막 섹션의 하단 마진 제거 */
+}
+
+#account-management {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#account-management > .form-group {
+    /* 사용자 이름 폼 그룹은 이제 account-main-content 외부에 있으므로 flex 속성 조정 */
+    flex: none; /* Flex 아이템으로 동작하지 않도록 */
+    width: 100%; /* 전체 너비 차지 */
+}
+
+.account-main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%; /* 부모의 전체 너비 차지 */
+}
+
+#account-actions-container {
+    flex: 2 1 600px; /* 이메일/비밀번호 변경 컨테이너 */
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+#account-actions-container > div {
+    flex: 1;
+    min-width: 300px; /* 최소 너비 설정 */
+}
+
+.account-footer-actions {
+    width: 100%; /* 전체 너비 차지 */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.my-menus-and-delete-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .settings-container h3 {

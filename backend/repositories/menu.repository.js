@@ -35,6 +35,11 @@ class MenuRepository {
   async findMenusByUsername(username) {
     return await Menu.find({ username }).populate('restaurantId');
   }
+
+  // 사용자 이름으로 메뉴 삭제
+  async deleteMenusByUsername(username) {
+    return await Menu.deleteMany({ username });
+  }
 }
 
 module.exports = new MenuRepository();

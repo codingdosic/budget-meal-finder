@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dialog.css">
 </head>
 <body>
     <h1>Register</h1>
@@ -14,6 +15,20 @@
         <input type="password" id="password" placeholder="Password" required>
         <button type="submit">Register</button>
     </form>
-    <script src="/js/register.js"></script>
+
+    <!-- Global Dialog Structure -->
+    <div id="global-dialog-overlay" class="dialog-overlay">
+        <div class="dialog-content">
+            <h2 id="global-dialog-title"></h2>
+            <p id="global-dialog-message"></p>
+            <input type="text" id="global-dialog-input" class="dialog-input" style="display: none;">
+            <div class="dialog-buttons">
+                <button id="global-dialog-confirm-btn" class="btn-primary">확인</button>
+                <button id="global-dialog-cancel-btn" class="btn-secondary">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/js/register.js"></script>
 </body>
 </html>

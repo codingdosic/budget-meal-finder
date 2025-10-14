@@ -1,0 +1,90 @@
+/* frontend/css/dialog.css */
+
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s;
+}
+
+.dialog-overlay.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.dialog-content {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 350px;
+    max-width: 90%;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s ease-out;
+}
+
+.dialog-overlay.visible .dialog-content {
+    transform: scale(1);
+}
+
+#global-dialog-title {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 22px;
+}
+
+#global-dialog-message {
+    margin-bottom: 20px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.dialog-buttons button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.hint-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 5px;
+}

@@ -76,3 +76,37 @@ export async function submitMenu(formData, token, menuId = null) {
         body: formData
     });
 }
+
+// 비밀번호 변경
+export async function changePassword(currentPassword, newPassword, token) {
+    return request(`${BASE_URL}/user/password`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ currentPassword, newPassword })
+    });
+}
+
+// 이메일 변경
+export async function changeEmail(newEmail, token) {
+    return request(`${BASE_URL}/user/email`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ newEmail })
+    });
+}
+
+// 계정 삭제
+export async function deleteAccount(token) {
+    return request(`${BASE_URL}/user`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+}

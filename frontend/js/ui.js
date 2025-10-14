@@ -28,7 +28,7 @@ const Elements = {
 let _pastedImageFile = null; // ui.js 내부에서만 사용
 
 // 사이드바 리스트 아이템 생성
-export function createListItem(menu, currentUser, onRecommend, onDelete, onEdit, onMarkerClick) {
+export function createListItem(menu, currentUser) {
     const item = document.createElement('div');
     item.className = 'marker-item';
     item.dataset.menuId = menu._id;
@@ -36,23 +36,23 @@ export function createListItem(menu, currentUser, onRecommend, onDelete, onEdit,
     const isRecommended = currentUser?.recommendedMenus.includes(menu._id);
     const isDisrecommended = currentUser?.disrecommendedMenus.includes(menu._id);
 
-    const imageHtml = menu.imageUrl 
-        ? `<img class="marker-item-image" src="${menu.imageUrl}" alt="${menu.name}">` 
+    const imageHtml = menu.imageUrl
+        ? `<img class="marker-item-image" src="${menu.imageUrl}" alt="${menu.name}">`
         : '<div class="marker-item-image"></div>';
 
     const date = new Date(menu.createdAt).toLocaleDateString();
 
     item.innerHTML = `
         ${imageHtml}
-        <div class="marker-info">
+        <div class="marker-info" data-action="pan">
             <h4>${menu.name}</h4>
             <p class="price">${menu.price.toLocaleString()}원</p>
             <p class="marker-item-description">${menu.description || '설명 없음'}</p>
             <div class="recommend-actions">
                 <div class="recommend-buttons">
-                    <button class="recommend-btn ${isRecommended ? 'recommended' : ''}" data-action="recommend">👍</button>
+                    <button class="recommend-btn ${isRecommended ? 'recommended' : ''}" data-action="recommend" data-id="${menu._id}">👍</button>
                     <span class="recommend-count">${menu.recommendations}</span>
-                    <button class="disrecommend-btn ${isDisrecommended ? 'disrecommended' : ''}" data-action="disrecommend">👎</button>
+                    <button class="disrecommend-btn ${isDisrecommended ? 'disrecommended' : ''}" data-action="disrecommend" data-id="${menu._id}">👎</button>
                     <span class="disrecommend-count">${menu.disrecommendations}</span>
                 </div>
                 <p class="marker-item-date">${date}</p>
@@ -60,23 +60,10 @@ export function createListItem(menu, currentUser, onRecommend, onDelete, onEdit,
         </div>
         ${menu.username === currentUser.username ? `
         <div class="marker-actions">
-            <button class="edit-btn">수정</button>
-            <button class="delete-btn">삭제</button>
+            <button class="edit-btn" data-action="edit" data-id="${menu._id}">수정</button>
+            <button class="delete-btn" data-action="delete" data-id="${menu._id}">삭제</button>
         </div>` : ''}
     `;
-
-    item.addEventListener('click', (e) => {
-        if (e.target.closest('.marker-actions') || e.target.closest('.recommend-actions')) return;
-        onMarkerClick(menu._id);
-    });
-
-    item.querySelector('.recommend-btn').addEventListener('click', () => onRecommend(menu._id, 'recommend'));
-    item.querySelector('.disrecommend-btn').addEventListener('click', () => onRecommend(menu._id, 'disrecommend'));
-
-    const editBtn = item.querySelector('.edit-btn');
-    const deleteBtn = item.querySelector('.delete-btn');
-    if (editBtn) editBtn.addEventListener('click', () => onEdit(menu));
-    if (deleteBtn) deleteBtn.addEventListener('click', () => onDelete(menu._id));
 
     return item;
 }
@@ -174,7 +161,7 @@ export function getElements() {
 }
 
 // 메뉴 리스트 렌더링
-export function renderMenuList(menus, currentUser, callbacks) {
+export function renderMenuList(menus, currentUser) {
     Elements.markerList.innerHTML = '';
     if (!menus || menus.length === 0) {
         Elements.markerList.innerHTML = '<p>표시할 메뉴가 없습니다.</p>';
@@ -183,11 +170,7 @@ export function renderMenuList(menus, currentUser, callbacks) {
     menus.forEach(menu => {
         const listItem = createListItem(
             menu,
-            currentUser,
-            callbacks.onRecommend,
-            callbacks.onDelete,
-            callbacks.onEdit,
-            callbacks.onMarkerClick
+            currentUser
         );
         Elements.markerList.appendChild(listItem);
     });

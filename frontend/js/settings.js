@@ -1,9 +1,20 @@
 // frontend/js/settings.js
 import * as api from './api.js';
+import { showDialog } from './dialog.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const currentPasswordInput = document.getElementById('current-password');
+    const newPasswordInput = document.getElementById('new-password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const changePasswordBtn = document.getElementById('change-password-btn');
+    const editEmailBtn = document.getElementById('edit-email-btn');
+    const deleteAccountBtn = document.getElementById('delete-account-btn');
     const backToMapBtn = document.getElementById('back-to-map-btn');
     const myMenusList = document.getElementById('my-menus-list');
+
+    let currentUser = null;
 
     async function initialize() {
         const token = localStorage.getItem('token');
@@ -13,13 +24,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
+            // 1. Fetch user data
+            const { data: user } = await api.fetchUser(token);
+            currentUser = user;
+            displayUserData(currentUser);
+
+            // 2. Fetch user's menus
             const { data: menus } = await api.fetchMyMenus(token);
             displayMyMenus(menus);
+
         } catch (error) {
             console.error('Error initializing settings page:', error);
             localStorage.removeItem('token');
             window.location.href = '/views/login.html';
         }
+    }
+
+    function displayUserData(user) {
+        usernameInput.value = user.username;
+        emailInput.value = user.email;
     }
 
     function displayMyMenus(menus) {
@@ -69,6 +92,82 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/';
     });
 
+    changePasswordBtn.addEventListener('click', async () => {
+        const currentPassword = currentPasswordInput.value;
+        const newPassword = newPasswordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+        const token = localStorage.getItem('token');
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            showDialog({ message: '모든 비밀번호 필드를 채워주세요.', title: '입력 오류' });
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            showDialog({ message: '새 비밀번호가 일치하지 않습니다.', title: '입력 오류' });
+            return;
+        }
+        if (newPassword.length < 6) { // Basic password strength check
+            showDialog({ message: '새 비밀번호는 최소 6자 이상이어야 합니다.', title: '입력 오류' });
+            return;
+        }
+
+        try {
+            await api.changePassword(currentPassword, newPassword, token);
+            showDialog({ message: '비밀번호가 성공적으로 변경되었습니다.', title: '성공' });
+            currentPasswordInput.value = '';
+            newPasswordInput.value = '';
+            confirmPasswordInput.value = '';
+        } catch (error) {
+            showDialog({ message: `비밀번호 변경 실패: ${error.message}`, title: '변경 오류' });
+        }
+    });
+
+    editEmailBtn.addEventListener('click', async () => {
+        showDialog({
+            title: '이메일 주소 변경',
+            message: '새로운 이메일 주소를 입력하세요:',
+            showInputField: true,
+            inputType: 'email',
+            inputValue: emailInput.value,
+            onConfirm: async (newEmail) => {
+                if (!newEmail || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(newEmail)) {
+                    showDialog({ message: '유효한 이메일 주소를 입력해주세요.', title: '입력 오류' });
+                    return;
+                }
+
+                const token = localStorage.getItem('token');
+                try {
+                    const { data: updatedUser } = await api.changeEmail(newEmail, token);
+                    showDialog({ message: '이메일 주소가 성공적으로 변경되었습니다.', title: '성공' });
+                    // Update displayed email directly from the response
+                    currentUser = updatedUser;
+                    displayUserData(currentUser);
+                } catch (error) {
+                    showDialog({ message: `이메일 변경 실패: ${error.message}`, title: '변경 오류' });
+                }
+            }
+        });
+    });
+
+    deleteAccountBtn.addEventListener('click', async () => {
+        showDialog({
+            message: '정말로 계정을 삭제하시겠습니까? 모든 데이터가 영구적으로 삭제됩니다.',
+            title: '계정 삭제 확인',
+            showCancelButton: true,
+            onConfirm: async () => {
+                const token = localStorage.getItem('token');
+                try {
+                    await api.deleteAccount(token);
+                    showDialog({ message: '계정이 성공적으로 삭제되었습니다.', title: '성공' });
+                    localStorage.clear(); // Clear all user data
+                    window.location.href = '/views/login.html'; // Redirect to login page
+                } catch (error) {
+                    showDialog({ message: `계정 삭제 실패: ${error.message}`, title: '삭제 오류' });
+                }
+            }
+        });
+    });
+
     myMenusList.addEventListener('click', async (e) => {
         const target = e.target;
         const menuId = target.dataset.id;
@@ -78,14 +177,19 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('editMenuId', menuId);
             window.location.href = '/';
         } else if (target.classList.contains('delete-btn')) {
-            if (confirm('정말로 이 메뉴를 삭제하시겠습니까?')) {
-                try {
-                    await api.deleteMenu(menuId, token);
-                    await initialize(); // Refresh the list
-                } catch (error) {
-                    alert(`메뉴 삭제 실패: ${error.message}`);
+            showDialog({
+                message: '정말로 이 메뉴를 삭제하시겠습니까?',
+                title: '메뉴 삭제 확인',
+                showCancelButton: true,
+                onConfirm: async () => {
+                    try {
+                        await api.deleteMenu(menuId, token);
+                        await initialize(); // Refresh the list
+                    } catch (error) {
+                        showDialog({ message: `메뉴 삭제 실패: ${error.message}`, title: '삭제 오류' });
+                    }
                 }
-            }
+            });
         }
     });
 

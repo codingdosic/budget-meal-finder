@@ -1,3 +1,5 @@
+import { showDialog } from './dialog.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('register-form');
 
@@ -18,15 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                alert('Registration successful! Please login.');
+                showDialog({ message: '회원가입이 성공적으로 완료되었습니다! 로그인해주세요.', title: '회원가입 성공' });
                 window.location.href = '/views/login.html';
             } else {
                 const data = await response.json();
-                alert(data.message);
+                showDialog({ message: data.message, title: '회원가입 실패' });
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            showDialog({ message: '알 수 없는 오류가 발생했습니다. 다시 시도해주세요.', title: '오류' });
         }
     });
 });
