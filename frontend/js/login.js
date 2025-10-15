@@ -50,4 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
     registerBtn.addEventListener('click', () => {
         window.location.href = '/views/register.html';
     });
+
+    const findCredentialsBtn = document.getElementById('find-credentials-btn');
+    findCredentialsBtn.addEventListener('click', () => {
+        window.location.href = '/find-credentials';
+    });
 });

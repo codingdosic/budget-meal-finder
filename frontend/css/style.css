@@ -167,12 +167,17 @@ main {
 }
 
 .marker-item-description {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-size: 13px;
     color: #666;
     margin-top: 4px;
+    /* Multi-line ellipsis */
+    white-space: normal; /* Allow wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limit to 3 lines */
+    -webkit-box-orient: vertical;
+    word-wrap: break-word; /* Break long words */
 }
 
 .marker-item-date {
@@ -424,13 +429,16 @@ nav ul li {
 .infowindow-content {
     font-family: Arial, sans-serif;
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    max-width: 300px; /* Set a max-width for stability */
 }
 
 .infowindow-image {
     width: 100%;
     height: auto;
     max-height: 150px;
-    object-fit: cover;
+    object-fit: contain; /* Ensure the whole image is visible */
     border-radius: 5px;
     margin-bottom: 12px;
 }
@@ -450,6 +458,7 @@ nav ul li {
     margin: 4px 0;
     font-size: 14px;
     color: #555;
+    word-wrap: break-word; /* Ensure long words break */
 }
 
 .infowindow-text strong {
@@ -462,9 +471,26 @@ nav ul li {
     margin-top: 10px;
 }
 
-/* Login Page Specific Styles */
-.login-page h1 {
+/* Form Page Specific Styles */
+.form-page h1 {
     text-align: center;
     margin-top: 20px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    min-height: 50px; /* 버튼이 있는 헤더와의 높이를 맞추기 위한 최소 높이 */
+    box-sizing: border-box; /* 패딩을 높이에 포함 */
+}
+
+.form-header button {
+    background-color: #6c757d; /* Gray */
+    margin: 0;
+}
+
+.form-header button:hover {
+    background-color: #5a6268;
 }

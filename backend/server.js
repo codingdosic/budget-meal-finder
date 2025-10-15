@@ -35,6 +35,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/views/index.html'));
 });
 
+// 아이디/비밀번호 찾기 페이지 라우트
+app.get('/find-credentials', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/views/find-credentials.html'));
+});
+
 // 라우트 연결
 // 인증 관련: /api/register, /api/login 등
 app.use('/api/auth', authRoutes);

@@ -110,3 +110,14 @@ export async function deleteAccount(token) {
         }
     });
 }
+
+// 비밀번호 재설정 요청
+export async function resetPassword(email) {
+    return request(`${BASE_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+    });
+}
