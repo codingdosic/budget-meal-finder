@@ -311,6 +311,12 @@ form {
     background-color: #fff;
 }
 
+.hint-text {
+    font-size: 12px;
+    color: #6c757d; /* Gray color */
+    margin: -5px 0 10px 2px; /* Adjust margin to be closer to the input field */
+}
+
 input {
     margin-bottom: 10px;
     padding: 10px;
