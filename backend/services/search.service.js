@@ -1,6 +1,7 @@
 // backend/services/search.service.js
 
 const RestaurantRepository = require('../repositories/restaurant.repository');
+const MenuRepository = require('../repositories/menu.repository');
 const ApiError = require('../errors/ApiError');
 
 class SearchService {
@@ -52,6 +53,22 @@ class SearchService {
     ];
 
     return await RestaurantRepository.aggregate(pipeline);
+  }
+
+  async searchMenus({ price, category, keyword }) {
+    const query = {};
+
+    if (price) {
+      query.price = { $lte: parseInt(price) };
+    }
+    if (category) {
+      query.category = category;
+    }
+    if (keyword) {
+      query.name = { $regex: keyword, $options: 'i' };
+    }
+
+    return await MenuRepository.searchMenus(query);
   }
 }
 

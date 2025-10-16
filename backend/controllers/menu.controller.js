@@ -55,7 +55,7 @@ class MenuController {
   deleteMenu = asyncHandler(async (req, res) => {
     const { id } = req.params;
     await MenuService.deleteMenu(id, req.user.userId);
-    sendSuccess(res, { message: 'Menu deleted successfully' });
+    res.status(204).send();
   });
 
   recommendMenu = asyncHandler(async (req, res) => {

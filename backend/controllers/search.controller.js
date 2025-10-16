@@ -10,6 +10,12 @@ class SearchController {
     const results = await SearchService.searchNearby(lat, lon, budget, distance);
     sendSuccess(res, results);
   });
+
+  searchMenus = asyncHandler(async (req, res) => {
+    const { price, category, keyword } = req.query;
+    const results = await SearchService.searchMenus({ price, category, keyword });
+    sendSuccess(res, results);
+  });
 }
 
 module.exports = new SearchController();
