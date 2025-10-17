@@ -12,6 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // UI 요소 가져오기
     const ui = uiModule.getElements();
+    const spinner = document.getElementById('loading-spinner');
+
+    // 스피너 제어 함수
+    function showSpinner() {
+        spinner.classList.add('visible');
+    }
+
+    function hideSpinner() {
+        spinner.classList.remove('visible');
+    }
 
     // 지도 초기화 함수
     function initMap() {
@@ -31,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = '/views/login.html';
             return;
         }
+        showSpinner();
         try {
             const { data } = await api.fetchUser(token);
             currentUser = data;
@@ -38,11 +49,14 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
             localStorage.clear();
             window.location.href = '/views/login.html';
+        } finally {
+            hideSpinner();
         }
     }
 
     // 모든 메뉴 데이터 가져오기
     async function fetchAllMenus() {
+        showSpinner();
         try {
             const { data } = await api.getAllMenus();
             allMenus = data;
@@ -50,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
             checkForEditRequest(); // Check for edit request after menus are loaded
         } catch (error) {
             console.error('Error fetching menus:', error);
+        } finally {
+            hideSpinner();
         }
     }
 
@@ -62,12 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 추천/비추천 처리
     async function handleRecommendation(menuId, action) {
+        showSpinner();
         try {
             await api.handleRecommendation(menuId, action, localStorage.getItem('token'));
             await fetchUserData();
             await fetchAllMenus();
         } catch (error) {
             showDialog({ message: error.message, title: '오류' });
+        } finally {
+            hideSpinner();
         }
     }
     
@@ -78,11 +97,14 @@ document.addEventListener('DOMContentLoaded', () => {
             title: '메뉴 삭제 확인',
             showCancelButton: true,
             onConfirm: async () => {
+                showSpinner();
                 try {
                     await api.deleteMenu(menuId, localStorage.getItem('token'));
                     await fetchAllMenus();
                 } catch (error) {
                     showDialog({ message: error.message, title: '오류' });
+                } finally {
+                    hideSpinner();
                 }
             }
         });
@@ -97,11 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
             maxPrice: ui.maxPriceInput.value
         };
 
+        showSpinner();
         try {
             const { data } = await api.applyAdvancedSearch(params);
             updateMapAndList(data);
         } catch (error) {
             console.error('Error during advanced search:', error);
+        } finally {
+            hideSpinner();
         }
     }
 
@@ -162,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('lon', ui.dialogNameInput.dataset.lon);
         }
 
+        showSpinner();
         try {
             const response = await api.submitMenu(formData, token, editingMenuId);
             if (response.ok) {
@@ -173,6 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error submitting menu:', error);
+        } finally {
+            hideSpinner();
         }
     }
 
