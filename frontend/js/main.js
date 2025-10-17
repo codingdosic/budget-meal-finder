@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showSpinner();
                 try {
                     await api.deleteMenu(menuId, localStorage.getItem('token'));
+                    uiModule.showToast('메뉴가 삭제되었습니다.');
                     await fetchAllMenus();
                 } catch (error) {
                     showDialog({ message: error.message, title: '오류' });
