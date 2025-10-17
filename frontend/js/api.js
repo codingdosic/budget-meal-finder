@@ -10,6 +10,9 @@ async function request(url, options = {}) {
             const errorData = await response.json().catch(() => ({ error: { message: response.statusText } }));
             throw new Error(errorData.error.message || 'API 요청에 실패했습니다.');
         }
+        if (response.status === 204) {
+            return {};
+        }
         return await response.json();
     } catch (error) {
         console.error('API Error:', error);

@@ -564,3 +564,49 @@ nav ul li {
     opacity: 1;
     transform: translateY(0);
 }
+
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    #map-container, #sidebar {
+        flex: 1;
+        height: 45vh; /* Adjust height for smaller screens */
+        min-height: 300px; /* Ensure a minimum height */
+    }
+
+    header {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .header-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    button {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    #search-input, #advanced-search-container select, #advanced-search-container input {
+        font-size: 14px;
+    }
+
+    .marker-item h4 {
+        font-size: 15px;
+    }
+
+    .marker-item-description {
+        -webkit-line-clamp: 2; /* Show fewer lines on mobile */
+    }
+}

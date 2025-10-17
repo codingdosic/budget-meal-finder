@@ -23,6 +23,22 @@ document.addEventListener('DOMContentLoaded', () => {
         spinner.classList.remove('visible');
     }
 
+    // API 에러 핸들러
+    function handleApiError(error) {
+        if (error.message.includes('Invalid token')) {
+            showDialog({
+                message: '세션이 만료되었습니다. 다시 로그인해주세요.',
+                title: '인증 오류',
+                onConfirm: () => {
+                    localStorage.clear();
+                    window.location.href = '/views/login.html';
+                }
+            });
+        } else {
+            showDialog({ message: error.message, title: '오류' });
+        }
+    }
+
     // 지도 초기화 함수
     function initMap() {
         mapModule.initMap(async () => {
@@ -84,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetchUserData();
             await fetchAllMenus();
         } catch (error) {
-            showDialog({ message: error.message, title: '오류' });
+            handleApiError(error);
         } finally {
             hideSpinner();
         }
@@ -103,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     uiModule.showToast('메뉴가 삭제되었습니다.');
                     await fetchAllMenus();
                 } catch (error) {
-                    showDialog({ message: error.message, title: '오류' });
+                    handleApiError(error);
                 } finally {
                     hideSpinner();
                 }
@@ -169,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 다이얼로그 제출 처리
     async function handleDialogSubmit() {
         const token = localStorage.getItem('token');
+        const isEditing = !!editingMenuId;
         const formData = new FormData();
         formData.append('name', ui.dialogNameInput.value);
         formData.append('description', ui.dialogDescriptionInput.value);
@@ -182,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('image', ui.dialogImageInput.files[0]);
         }
 
-        // 새 메뉴 추가 시 위도, 경도 추가
         if (!editingMenuId) {
             formData.append('lat', ui.dialogNameInput.dataset.lat);
             formData.append('lon', ui.dialogNameInput.dataset.lon);
@@ -194,12 +210,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 closeDialog();
                 await fetchAllMenus();
+                uiModule.showToast(isEditing ? '메뉴가 수정되었습니다.' : '메뉴가 추가되었습니다.');
             } else {
                 const errorData = await response.json();
-                showDialog({ message: `저장 실패: ${errorData.error.message}`, title: '저장 오류' });
+                if (errorData.error && errorData.error.message.includes('Invalid token')) {
+                    handleApiError(new Error(errorData.error.message));
+                } else {
+                    showDialog({ message: `저장 실패: ${errorData.error.message}`, title: '저장 오류' });
+                }
             }
         } catch (error) {
             console.error('Error submitting menu:', error);
+            handleApiError(error);
         } finally {
             hideSpinner();
         }
@@ -233,10 +255,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.dialogSubmitBtn.addEventListener('click', handleDialogSubmit);
         ui.dialogCancelBtn.addEventListener('click', closeDialog);
 
-        // 다이얼로그에 붙여넣기 이벤트 추가
         ui.markerDialog.addEventListener('paste', uiModule.handlePaste);
 
-        // 파일 입력 변경 시 미리보기 업데이트
         ui.dialogImageInput.addEventListener('change', () => {
             if (ui.dialogImageInput.files[0]) {
                 uiModule.updateImagePreview(ui.dialogImageInput.files[0]);
@@ -250,9 +270,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ui.myLocationBtn.addEventListener('click', () => {
             mapModule.showMyLocation();
+            uiModule.showToast('내 위치로 이동합니다.');
         });
 
-        // Event Delegation for marker list
         ui.markerList.addEventListener('click', (e) => {
             const target = e.target;
             const actionElement = target.closest('[data-action]');
