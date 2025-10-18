@@ -1,0 +1,32 @@
+services:
+  backend:
+    build: .
+    command: npm run dev
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env
+    volumes:
+      - ./backend:/usr/src/app/backend
+      - ./frontend:/usr/src/app/frontend
+      - ./models:/usr/src/app/models
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

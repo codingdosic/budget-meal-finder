@@ -227,22 +227,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Helper function to clear filters and re-apply search
+    function clearFiltersAndSearch() {
+        ui.searchInput.value = '';
+        ui.categorySelect.value = '';
+        ui.sortBySelect.value = 'createdAt';
+        ui.maxPriceInput.value = '';
+        applyAdvancedSearch();
+    }
+
     // 모든 이벤트 리스너 설정
     function setupEventListeners() {
         ui.searchButton.addEventListener('click', applyAdvancedSearch);
-        ui.clearSearchButton.addEventListener('click', () => {
-            ui.searchInput.value = '';
-            ui.categorySelect.value = '';
-            ui.sortBySelect.value = 'createdAt';
-            ui.maxPriceInput.value = '';
-            applyAdvancedSearch();
+        ui.searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                applyAdvancedSearch();
+            } else if (event.key === 'Escape') {
+                clearFiltersAndSearch();
+            }
         });
+        ui.clearSearchButton.addEventListener('click', clearFiltersAndSearch);
         ui.categorySelect.addEventListener('change', applyAdvancedSearch);
         ui.sortBySelect.addEventListener('change', applyAdvancedSearch);
         ui.maxPriceInput.addEventListener('input', applyAdvancedSearch);
 
         ui.addMarkerButton.addEventListener('click', () => {
-            showDialog({ message: '지도를 클릭하여 새 메뉴를 추가할 위치를 선택하세요.', title: '메뉴 추가', autoClose: true, duration: 3000 });
+            showDialog({ message: '지도를 클릭하여 메뉴를 추가할 위치를 선택하세요.', title: '메뉴 추가', autoClose: true, duration: 3000 });
             mapModule.addMapClickListener((latLng) => {
                 openAddMenuDialog(latLng);
             });

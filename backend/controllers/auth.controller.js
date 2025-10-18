@@ -6,7 +6,7 @@ const { sendSuccess } = require('../utils/responseHandler');
 
 class AuthController {
   register = asyncHandler(async (req, res) => {
-    const user = await AuthService.registerUser(req.body);
+    const user = await AuthService.register(req.body);
     sendSuccess(res, user, 201);
   });
 

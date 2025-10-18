@@ -6,4 +6,6 @@ const SearchController = require('../controllers/search.controller');
 
 router.get('/', SearchController.searchMenus);
 
+router.get('/nearby', SearchController.searchNearby);
+
 module.exports = router;

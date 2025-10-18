@@ -30,7 +30,7 @@ exports.changePassword = asyncHandler(async (req, res) => {
         throw new ApiError(404, '사용자를 찾을 수 없습니다.');
     }
 
-    const isMatch = await user.comparePassword(currentPassword);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
         throw new ApiError(401, '현재 비밀번호가 일치하지 않습니다.');
     }
