@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const MenuController = require('../controllers/menu.controller');
 const authMiddleware = require('../middleware/authMiddleware');
+const upload = require('../middleware/upload');
 
 // [GET] 고급 검색
 router.get('/advanced-search', MenuController.advancedSearch);
@@ -15,16 +16,16 @@ router.get('/all-menus', MenuController.getAllMenus);
 router.get('/my-menus', authMiddleware, MenuController.getMenusByCurrentUser);
 
 // [POST] 특정 식당에 메뉴 추가
-router.post('/:restaurantId/menus', authMiddleware, MenuController.upload, MenuController.createMenuForRestaurant);
+router.post('/:restaurantId/menus', authMiddleware, upload.single('image'), MenuController.createMenuForRestaurant);
 
 // [GET] 특정 식당의 메뉴 목록 조회
 router.get('/:restaurantId/menus', MenuController.getMenusByRestaurant);
 
 // [POST] 지도에서 마커 추가 시 메뉴 생성
-router.post('/', authMiddleware, MenuController.upload, MenuController.createMenuWithNewRestaurant);
+router.post('/', authMiddleware, upload.single('image'), MenuController.createMenuWithNewRestaurant);
 
 // [PUT] 특정 메뉴 정보 수정
-router.put('/:id', authMiddleware, MenuController.upload, MenuController.updateMenu);
+router.put('/:id', authMiddleware, upload.single('image'), MenuController.updateMenu);
 
 // [DELETE] 특정 메뉴 삭제
 router.delete('/:id', authMiddleware, MenuController.deleteMenu);
