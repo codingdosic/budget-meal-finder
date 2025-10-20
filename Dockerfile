@@ -10,6 +10,9 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 
+# uploads 디렉토리 생성
+RUN mkdir -p /usr/src/app/uploads
+
 # 4. 소스코드 복사
 # backend, models 디렉토리와 같이 서버 실행에 필요한 파일들 복사
 COPY backend/ ./backend/
