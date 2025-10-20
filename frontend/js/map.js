@@ -7,6 +7,7 @@ let infoWindow;
 let markers = [];
 let markerClustererInstance;
 let myLocationMarker = null;
+let clickedMarker = null;
 
 // 정보창 콘텐츠 생성
 function createInfoWindowContent(menu) {
@@ -42,6 +43,7 @@ export function initMap(onMapLoadCallback) {
 
                 map.addListener('click', () => {
                     infoWindow.close();
+                    clickedMarker = null;
                 });
 
                 if (onMapLoadCallback) {
@@ -74,25 +76,24 @@ export function updateMap(menus, shouldFitBounds = false) {
         const position = { lat: menu.lat, lng: menu.lon };
         const marker = new google.maps.Marker({ position, title: menu.name });
 
-        let infowindowOpen = false;
         marker.addListener('click', () => {
             infoWindow.setContent(createInfoWindowContent(menu));
             infoWindow.open(map, marker);
-            infowindowOpen = true;
+            clickedMarker = marker;
         });
         marker.addListener('mouseover', () => {
-            if (!infowindowOpen) {
+            if (!clickedMarker) {
                 infoWindow.setContent(createInfoWindowContent(menu));
                 infoWindow.open(map, marker);
             }
         });
         marker.addListener('mouseout', () => {
-            if (!infowindowOpen) {
+            if (!clickedMarker) {
                 infoWindow.close();
             }
         });
         google.maps.event.addListener(infoWindow, 'closeclick', () => {
-            infowindowOpen = false;
+            clickedMarker = null;
         });
 
         bounds.extend(position);

@@ -26,8 +26,13 @@ class UserRepository {
   }
 
   // 사용자 비밀번호 업데이트
-  async updateUserPassword(userId, newHashedPassword) {
-    return await User.findByIdAndUpdate(userId, { password: newHashedPassword }, { new: true });
+  async updateUserPassword(userId, newPassword) {
+    const user = await this.findUserById(userId);
+    if (!user) {
+      throw new ApiError(404, 'User not found');
+    }
+    user.password = newPassword;
+    return await user.save();
   }
 
   // 사용자 이메일 업데이트

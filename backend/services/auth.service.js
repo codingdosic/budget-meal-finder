@@ -15,8 +15,7 @@ class AuthService {
       throw new ApiError(409, 'An account with this email already exists.');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await UserRepository.createUser({ username, email, password: hashedPassword });
+    const user = await UserRepository.createUser({ username, email, password });
     return { id: user._id, username: user.username, email: user.email };
   }
 
@@ -42,9 +41,7 @@ class AuthService {
     }
 
     const tempPassword = Math.random().toString(36).slice(-8);
-    const hashedPassword = await bcrypt.hash(tempPassword, 10);
-
-    await UserRepository.updateUserPassword(user._id, hashedPassword);
+    await UserRepository.updateUserPassword(user._id, tempPassword);
 
     return { tempPassword };
   }
