@@ -40,10 +40,7 @@ exports.changePassword = asyncHandler(async (req, res) => {
     }
 
     // Hash the new password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-    await UserRepository.updateUserPassword(userId, hashedPassword);
+    await UserRepository.updateUserPassword(userId, newPassword);
 
     sendSuccess(res, { message: '비밀번호가 성공적으로 변경되었습니다.' });
 });
