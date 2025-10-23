@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showDialog({
             title: '관리자 보안 코드 입력',
             message: '관리자 계정 생성을 위한 보안 코드를 입력하세요.',
-            useInput: true,
+            showInputField: true,
             onConfirm: async (securityCode) => {
                 if (!securityCode) {
                     showDialog({ message: '보안 코드를 입력해야 합니다.', title: '오류' });
