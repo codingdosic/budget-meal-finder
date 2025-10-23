@@ -31,7 +31,7 @@ class MenuController {
 
   updateMenu = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const updatedMenu = await MenuService.updateMenu(id, req.body, req.file);
+    const updatedMenu = await MenuService.updateMenu(id, req.body, req.file, req.user.userId);
     sendSuccess(res, updatedMenu);
   });
 

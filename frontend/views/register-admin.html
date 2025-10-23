@@ -3,33 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/dialog.css">
-    <style>
-        .admin-register-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-            color: #555;
-            text-decoration: none;
-        }
-        .admin-register-link:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body class="form-page">
-    <header class="form-header"></header>
-    <h1>Login</h1>
-    <form id="login-form">
+    <header class="form-header">
+        <button type="button" id="back-to-login-btn" onclick="window.location.href='/views/login.html'">로그인으로 돌아가기</button>
+    </header>
+    <h1>Register</h1>
+    <form id="register-form">
+        <input type="text" id="username" placeholder="Username" required>
         <input type="email" id="email" placeholder="Email" required>
         <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-        <button type="button" id="register-btn">Register</button>
-        <button type="button" id="find-credentials-btn">아이디/비밀번호 찾기</button>
-        <a href="/views/register-admin.html" class="admin-register-link">관리자 계정 생성</a>
+        <p class="hint-text">비밀번호는 6자 이상이어야 합니다.</p>
+        <button type="submit">Register</button>
     </form>
 
     <!-- Global Dialog Structure -->
@@ -45,6 +33,6 @@
         </div>
     </div>
 
-    <script type="module" src="/js/login.js"></script>
+    <script type="module" src="/js/register-admin.js"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0", 
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
     "express-validator": "^7.2.1",

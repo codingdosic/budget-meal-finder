@@ -1,4 +1,5 @@
 // 환경변수 설정 (dotenv)
+
 // .env 파일의 환경변수를 process.env로 불러오기 위해 사용
 require('dotenv').config();
 
@@ -16,13 +17,15 @@ const miscRoutes = require('./routes/miscRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 const userRoutes = require('./routes/userRoutes');
 
+// 어플리케이션 인스턴스 생성
 const app = express();
 
 // 데이터베이스 연결 실행
 connectDB();
 
-// JSON 요청 본문을 파싱하는 미들웨어 등록
+// JSON 요청 본문을 파싱하는 전역 미들웨어 등록
 app.use(express.json());
+
 
 // 'uploads' 폴더의 파일을 정적 자산으로 제공
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
@@ -39,6 +42,7 @@ app.get('/', (req, res) => {
 app.get('/find-credentials', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/views/find-credentials.html'));
 });
+
 
 // 라우트 연결
 // 인증 관련: /api/register, /api/login 등

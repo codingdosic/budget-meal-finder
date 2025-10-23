@@ -61,7 +61,20 @@ class MenuService {
     return await MenuRepository.findMenusByRestaurantId(restaurantId);
   }
 
-  async updateMenu(menuId, updateData, file) {
+  async updateMenu(menuId, updateData, file, userId) {
+    const requestingUser = await User.findById(userId);
+    if (!requestingUser) throw new ApiError(401, 'Unauthorized');
+
+    const menu = await MenuRepository.findMenuById(menuId);
+    if (!menu) throw new ApiError(404, 'Menu not found');
+
+    const isOwner = menu.username === requestingUser.username;
+    const isAdmin = requestingUser.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      throw new ApiError(403, 'You do not have permission to update this menu.');
+    }
+
     if (file) {
       updateData.imageUrl = `/uploads/${file.filename}`;
     }
@@ -74,13 +87,21 @@ class MenuService {
     const menu = await MenuRepository.findMenuById(menuId);
     if (!menu) throw new ApiError(404, 'Menu not found');
 
-    const user = await User.findOne({ username: menu.username });
-    if (!user || user._id.toString() !== userId) {
-      throw new ApiError(403, 'Unauthorized');
+    const requestingUser = await User.findById(userId);
+    if (!requestingUser) throw new ApiError(401, 'Unauthorized');
+
+    const isOwner = menu.username === requestingUser.username;
+    const isAdmin = requestingUser.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      throw new ApiError(403, 'You do not have permission to delete this menu.');
     }
 
-    user.menus.pull(menuId);
-    await user.save();
+    const owner = await User.findOne({ username: menu.username });
+    if (owner) {
+      owner.menus.pull(menuId);
+      await owner.save();
+    }
 
     return await MenuRepository.deleteMenu(menuId);
   }

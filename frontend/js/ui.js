@@ -58,7 +58,7 @@ export function createListItem(menu, currentUser) {
                 <p class="marker-item-date">${date}</p>
             </div>
         </div>
-        ${menu.username === currentUser.username ? `
+        ${(menu.username === currentUser.username || (currentUser && currentUser.role === 'admin')) ? `
         <div class="marker-actions">
             <button class="edit-btn" data-action="edit" data-id="${menu._id}">수정</button>
             <button class="delete-btn" data-action="delete" data-id="${menu._id}">삭제</button>

@@ -124,3 +124,14 @@ export async function resetPassword(email) {
         body: JSON.stringify({ email })
     });
 }
+
+// 관리자 계정 생성
+export async function registerAdmin(data) {
+    return request(`${BASE_URL}/auth/register-admin`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+}
