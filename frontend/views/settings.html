@@ -48,19 +48,32 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-        <div class="my-menus-and-delete-container">
-            <section id="my-content">
-                <h3>내가 등록한 메뉴</h3>
-                <div id="my-menus-list"></div>
-            </section>
-
             <div class="account-footer-actions">
                 <hr>
                 <button id="delete-account-btn" class="btn-danger">계정 삭제</button>
             </div>
+        </section>
+
+        <div class="admin-content-wrapper">
+            <section id="admin-panel" style="display: none;">
+                <h3>사용자 관리</h3>
+                <div class="form-group">
+                    <input type="text" id="user-search-input" placeholder="사용자 이름 또는 이메일로 검색">
+                    <button id="user-search-btn" class="btn-primary">검색</button>
+                </div>
+                <div id="user-list"></div>
+            </section>
+
+            <section id="selected-user-content" style="display: none;">
+                <h3 id="selected-user-menu-title">선택된 사용자의 메뉴</h3>
+                <div id="selected-user-menus-list"></div>
+            </section>
         </div>
+
+        <section id="my-content">
+            <h3 id="menu-display-title">내가 등록한 메뉴</h3>
+            <div id="my-menus-list"></div>
+        </section>
 
     </main>
 

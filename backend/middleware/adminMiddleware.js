@@ -9,7 +9,7 @@ const adminMiddleware = (req, res, next) => {
     next();
   } else {
     // 관리자가 아닐 경우 403 Forbidden 에러 발생
-    next(ApiError.forbidden('접근 권한이 없습니다. 관리자만 접근 가능합니다.'));
+    next(new ApiError(403, '접근 권한이 없습니다. 관리자만 접근 가능합니다.'));
   }
 };
 

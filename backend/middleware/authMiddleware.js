@@ -31,6 +31,7 @@ const authMiddleware = async (req, res, next) => {
     
     // 사용자 정보를 요청 객체에 추가
     req.user = decoded;
+    console.log('Auth Middleware - req.user:', req.user);
 
     // 다음 미들웨어 또는 라우터로 이동
     next();

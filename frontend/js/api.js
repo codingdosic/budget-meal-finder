@@ -135,3 +135,18 @@ export async function registerAdmin(data) {
         body: JSON.stringify(data)
     });
 }
+
+// (관리자) 모든 사용자 정보 가져오기
+export async function getAllUsersAdmin(token, searchQuery = '') {
+    const url = searchQuery ? `${BASE_URL}/admin/users?search=${searchQuery}` : `${BASE_URL}/admin/users`;
+    return request(url, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+}
+
+// (관리자) 특정 사용자의 메뉴 정보 가져오기
+export async function getUserMenusAdmin(userId, token) {
+    return request(`${BASE_URL}/admin/users/${userId}/menus`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+}

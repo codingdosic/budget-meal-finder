@@ -16,6 +16,7 @@ const menuRoutes = require('./routes/menuRoutes');
 const miscRoutes = require('./routes/miscRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 // 어플리케이션 인스턴스 생성
 const app = express();
@@ -58,6 +59,7 @@ app.use('/api/menus', menuRoutes);
 app.use('/api', miscRoutes);
 app.use('/api', searchRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/admin', adminRoutes);
 
 const errorHandler = require('./middleware/errorHandler');
 
