@@ -5,16 +5,27 @@ const BASE_URL = '/api';
 // 에러 핸들링을 포함한 fetch 래퍼 함수
 async function request(url, options = {}) {
     try {
+
+        // 옵션(method, headers, body 등) 요청 보내기
         const response = await fetch(url, options);
+
+        // 상태 코드 체크(200번대가 아니면 에러 처리)
         if (!response.ok) {
+
+            //에러 데이터 추출, json이 아니거나 추출 실패 시 기본 메시지 사용
             const errorData = await response.json().catch(() => ({ error: { message: response.statusText } }));
             throw new Error(errorData.error.message || 'API 요청에 실패했습니다.');
         }
+
+        // 204 No Content 처리
         if (response.status === 204) {
             return {};
         }
+
+        // 정상 응답 js 객체로 변환하여 반환
         return await response.json();
-    } catch (error) {
+
+    } catch (error) { // 다른 오류 처리
         console.error('API Error:', error);
         throw error;
     }
@@ -125,7 +136,7 @@ export async function resetPassword(email) {
     });
 }
 
-// 관리자 계정 생성
+// (관리자) 계정 생성
 export async function registerAdmin(data) {
     return request(`${BASE_URL}/auth/register-admin`, {
         method: 'POST',
@@ -149,4 +160,26 @@ export async function getUserMenusAdmin(userId, token) {
     return request(`${BASE_URL}/admin/users/${userId}/menus`, {
         headers: { 'Authorization': `Bearer ${token}` }
     });
+}
+
+// 계정 생성
+export async function register(data){
+    return request(`${BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+}
+
+// 로그인
+export async function login(data) {
+    return request(`${BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
 }

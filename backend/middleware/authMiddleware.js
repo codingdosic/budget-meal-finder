@@ -10,7 +10,7 @@
 // jwt 모듈 불러오기
 const jwt = require('jsonwebtoken');
 
-// 인증 미들웨어 함수 정의
+// 인증 미들웨어
 const authMiddleware = async (req, res, next) => {
 
   // 요청 헤더에서 Authorization 값을 가져옴

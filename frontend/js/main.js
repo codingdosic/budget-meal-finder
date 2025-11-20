@@ -5,6 +5,7 @@ import * as uiModule from './ui.js';
 import { showDialog } from './dialog.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+
     // 전역 변수 선언
     let allMenus = [];
     let currentUser = null;
@@ -16,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 스피너 제어 함수
     function showSpinner() {
+
+        // 클래스 속성 조작
         spinner.classList.add('visible');
     }
 
@@ -44,7 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
         mapModule.initMap(async () => {
             await fetchUserData();
             if (currentUser) {
+
+                // 메뉴 데이터 가져오기
                 await fetchAllMenus();
+
+                // 이벤트 리스너 설정
                 setupEventListeners();
             }
         });
@@ -52,16 +59,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 사용자 정보 가져오기
     async function fetchUserData() {
+
+        // 로컬 스토리지에서 토큰 가져오기
         const token = localStorage.getItem('token');
+
+        // 토큰이 없으면 로그인 페이지로 리디렉션
         if (!token) {
             window.location.href = '/views/login.html';
             return;
         }
+        
         showSpinner();
         try {
+
+            // 사용자 정보 가져와서 전역 변수에 저장
             const { data } = await api.fetchUser(token);
             currentUser = data;
         } catch (error) {
+
+            // 에러 발생 시 로컬 스토리지 정리 후 로그인 페이지로 리디렉션
             console.error(error);
             localStorage.clear();
             window.location.href = '/views/login.html';
@@ -74,10 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchAllMenus() {
         showSpinner();
         try {
+
+            // 메뉴 데이터 가져와서 전역 변수에 저장
             const { data } = await api.getAllMenus();
             allMenus = data;
+
+            // 지도와 리스트 업데이트
             updateMapAndList(allMenus);
-            checkForEditRequest(); // Check for edit request after menus are loaded
+            checkForEditRequest(); 
         } catch (error) {
             console.error('Error fetching menus:', error);
         } finally {
@@ -238,7 +258,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 모든 이벤트 리스너 설정
     function setupEventListeners() {
+
+        // 검색 관련 이벤트 리스너
         ui.searchButton.addEventListener('click', applyAdvancedSearch);
+
+        // 엔터키 및 이스케이프키 처리
         ui.searchInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 applyAdvancedSearch();
@@ -251,6 +275,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.sortBySelect.addEventListener('change', applyAdvancedSearch);
         ui.maxPriceInput.addEventListener('input', applyAdvancedSearch);
 
+        // 헤더 버튼 이벤트 리스너
+        ui.myLocationBtn.addEventListener('click', () => {
+            mapModule.showMyLocation();
+            uiModule.showToast('내 위치로 이동합니다.');
+        });
+
         ui.addMarkerButton.addEventListener('click', () => {
             showDialog({ message: '지도를 클릭하여 메뉴를 추가할 위치를 선택하세요.', title: '메뉴 추가', autoClose: true, duration: 3000 });
             mapModule.addMapClickListener((latLng) => {
@@ -262,6 +292,12 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = '/views/settings.html';
         });
 
+        ui.logoutBtn.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/views/login.html';
+        });
+
+        // 다이얼로그 이벤트 리스너
         ui.dialogSubmitBtn.addEventListener('click', handleDialogSubmit);
         ui.dialogCancelBtn.addEventListener('click', closeDialog);
 
@@ -273,33 +309,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        ui.logoutBtn.addEventListener('click', () => {
-            localStorage.clear();
-            window.location.href = '/views/login.html';
-        });
-
-        ui.myLocationBtn.addEventListener('click', () => {
-            mapModule.showMyLocation();
-            uiModule.showToast('내 위치로 이동합니다.');
-        });
-
+        
+        // 마커 리스트 클릭 이벤트 리스너
         ui.markerList.addEventListener('click', (e) => {
             const target = e.target;
+
+            // 데이터 속성에서 액션과 메뉴 ID 추출
             const actionElement = target.closest('[data-action]');
             if (!actionElement) return;
 
             const action = actionElement.dataset.action;
             const menuId = actionElement.dataset.id;
 
+            // 액션에 따른 분기
             switch (action) {
+
+                // 해당 위치로 이동
                 case 'pan':
                     const parentItem = actionElement.closest('.marker-item');
                     mapModule.panToMarker(parentItem.dataset.menuId);
                     break;
+
+                // 추천/비추천
                 case 'recommend':
                 case 'disrecommend':
                     handleRecommendation(menuId, action);
                     break;
+                
+                // 메뉴 수정/삭제
                 case 'edit':
                     const menuToEdit = allMenus.find(menu => menu._id === menuId);
                     if (menuToEdit) openEditMenuDialog(menuToEdit);

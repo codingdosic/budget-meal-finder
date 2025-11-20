@@ -9,6 +9,8 @@ class AuthService {
 
   // 가입 비즈니스 로직
   async register(userData) {
+
+    // 받은 js 객체 분해
     const { username, email, password } = userData;
 
     // 사용자 중복 확인
@@ -17,7 +19,10 @@ class AuthService {
       throw new ApiError(409, 'An account with this email already exists.');
     }
 
+    // 사용자 생성 
     const user = await UserRepository.createUser({ username, email, password });
+
+    // 사용자 객체 반환
     return { id: user._id, username: user.username, email: user.email };
   }
 
@@ -40,19 +45,29 @@ class AuthService {
     return { id: user._id, username: user.username, email: user.email, role: user.role };
   }
 
-
+  // 로그인 비즈니스 로직
   async login(email, password) {
+
+    // 사용자 조회
     const user = await UserRepository.findUserByEmail(email);
     if (!user) {
-      throw new ApiError(401, 'Invalid credentials');
+      throw new ApiError(401, 'User does not exist');
     }
 
+    // 비밀번호 일치 여부 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new ApiError(401, 'Invalid credentials');
     }
 
-    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    // JWT 토큰 생성
+    const token = jwt.sign(
+      { userId: user._id, username: user.username, role: user.role }, // 페이로드(토큰에 담길 데이터)
+      process.env.JWT_SECRET, // 비밀키
+      { expiresIn: '1h' } // 옵션
+    );
+
+    // 토큰 및 사용자 정보 반환
     return { token, username: user.username, role: user.role };
   }
 

@@ -1,40 +1,236 @@
-// backend/routes/menuRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const MenuController = require('../controllers/menu.controller');
 const authMiddleware = require('../middleware/authMiddleware');
 const upload = require('../middleware/upload');
 
-// [GET] 고급 검색
+/**
+ * @swagger
+ * /api/menus/advanced-search:
+ *   get:
+ *     tags: [Menu]
+ *     summary: Advanced search for menus
+ *     parameters:
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: minPrice
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: maxPrice
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A list of menus
+ *       500:
+ *         description: Server error
+ */
 router.get('/advanced-search', MenuController.advancedSearch);
 
-// [GET] 모든 메뉴 조회
+/**
+ * @swagger
+ * /api/menus/all-menus:
+ *   get:
+ *     tags: [Menu]
+ *     summary: Get all menus
+ *     responses:
+ *       200:
+ *         description: A list of all menus
+ *       500:
+ *         description: Server error
+ */
 router.get('/all-menus', MenuController.getAllMenus);
 
-// [GET] 내가 작성한 메뉴 조회
+/**
+ * @swagger
+ * /api/menus/my-menus:
+ *   get:
+ *     tags: [Menu]
+ *     summary: Get menus created by the current user
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of my menus
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
 router.get('/my-menus', authMiddleware, MenuController.getMenusByCurrentUser);
 
-// [POST] 특정 식당에 메뉴 추가
-router.post('/:restaurantId/menus', authMiddleware, upload.single('image'), MenuController.createMenuForRestaurant);
+/**
+ * @swagger
+ * /api/menus:
+ *   post:
+ *     tags: [Menu]
+ *     summary: Create a new menu
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               restaurant:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               price:
+ *                 type: integer
+ *               category:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               lat:
+ *                 type: number
+ *               lng:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: Menu created successfully
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+router.post('/', authMiddleware, upload.single('image'), MenuController.createMenu);
 
-// [GET] 특정 식당의 메뉴 목록 조회
-router.get('/:restaurantId/menus', MenuController.getMenusByRestaurant);
-
-// [POST] 지도에서 마커 추가 시 메뉴 생성
-router.post('/', authMiddleware, upload.single('image'), MenuController.createMenuWithNewRestaurant);
-
-// [PUT] 특정 메뉴 정보 수정
+/**
+ * @swagger
+ * /api/menus/{id}:
+ *   put:
+ *     tags: [Menu]
+ *     summary: Update a specific menu
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               restaurant:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               price:
+ *                 type: integer
+ *               category:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Menu updated successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Menu not found
+ *       500:
+ *         description: Server error
+ */
 router.put('/:id', authMiddleware, upload.single('image'), MenuController.updateMenu);
 
-// [DELETE] 특정 메뉴 삭제
+/**
+ * @swagger
+ * /api/menus/{id}:
+ *   delete:
+ *     tags: [Menu]
+ *     summary: Delete a specific menu
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Menu deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Menu not found
+ *       500:
+ *         description: Server error
+ */
 router.delete('/:id', authMiddleware, MenuController.deleteMenu);
 
-// [POST] 메뉴 추천
+/**
+ * @swagger
+ * /api/menus/{id}/recommend:
+ *   post:
+ *     tags: [Menu]
+ *     summary: Recommend a menu
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Menu recommended successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Menu not found
+ *       500:
+ *         description: Server error
+ */
 router.post('/:id/recommend', authMiddleware, MenuController.recommendMenu);
 
-// [POST] 메뉴 비추천
+/**
+ * @swagger
+ * /api/menus/{id}/disrecommend:
+ *   post:
+ *     tags: [Menu]
+ *     summary: Disrecommend a menu
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Menu disrecommended successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Menu not found
+ *       500:
+ *         description: Server error
+ */
 router.post('/:id/disrecommend', authMiddleware, MenuController.disrecommendMenu);
 
 module.exports = router;
-""

@@ -10,14 +10,59 @@ const adminMiddleware = require('../middleware/adminMiddleware');
 // 모든 라우트에 인증 및 관리자 권한 미들웨어 적용
 router.use(authMiddleware, adminMiddleware);
 
-router.get('/test', (req, res) => {
-  res.status(200).send('Admin test route hit!');
-});
+/**
+ * jsdoc 주석 
+ * @swagger
+ * /api/admin/users:
+ *   get:
+ *     tags: [Admin]
+ *     summary: Get all users (with search)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search keyword for username or email
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Server error
+ */
+router.get('/users', adminController.getAllUsers);
 
-// 모든 사용자 목록 가져오기 (검색 기능 포함)
-router.get('/users', authMiddleware, adminMiddleware, adminController.getAllUsers);
-
-// 특정 사용자의 모든 메뉴 가져오기
+/**
+ * @swagger
+ * /api/admin/users/{userId}/menus:
+ *   get:
+ *     tags: [Admin]
+ *     summary: Get all menus for a specific user
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A list of menus for the specified user
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 router.get('/users/:userId/menus', adminController.getUserMenus);
 
 module.exports = router;

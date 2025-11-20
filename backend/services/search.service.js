@@ -1,6 +1,3 @@
-// backend/services/search.service.js
-
-const RestaurantRepository = require('../repositories/restaurant.repository');
 const MenuRepository = require('../repositories/menu.repository');
 const ApiError = require('../errors/ApiError');
 
@@ -17,42 +14,33 @@ class SearchService {
             type: 'Point',
             coordinates: [parseFloat(lon), parseFloat(lat)],
           },
-          distanceField: 'dist.calculated',
+          distanceField: 'distance', // Output distance field
           maxDistance: parseInt(distance),
+          query: { price: { $lte: parseInt(budget) } }, // Filter by budget
           spherical: true,
         },
       },
       {
-        $lookup: {
-          from: 'menus',
-          localField: '_id',
-          foreignField: 'restaurantId',
-          as: 'menus',
-        },
-      },
-      {
-        $unwind: '$menus',
-      },
-      {
-        $match: {
-          'menus.price': { $lte: parseInt(budget) },
-        },
-      },
-      {
         $project: {
-          _id: 0,
-          restaurantName: '$name',
-          restaurantAddress: '$address',
-          distance: '$dist.calculated',
-          menuName: '$menus.name',
-          menuPrice: '$menus.price',
+          _id: 1,
+          name: 1,
+          price: 1,
+          description: 1,
+          username: 1,
+          category: 1,
+          imageUrl: 1,
+          recommendations: 1,
+          disrecommendations: 1,
+          createdAt: 1,
+          distance: 1,
           lat: { $arrayElemAt: ['$location.coordinates', 1] },
-          lon: { $arrayElemAt: ['$location.coordinates', 0] }
+          lon: { $arrayElemAt: ['$location.coordinates', 0] },
         },
       },
     ];
 
-    return await RestaurantRepository.aggregate(pipeline);
+    // We need to add an aggregate method to MenuRepository
+    return await MenuRepository.aggregate(pipeline);
   }
 
   async searchMenus({ price, category, keyword }) {

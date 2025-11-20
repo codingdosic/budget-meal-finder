@@ -1,11 +1,7 @@
-// models/Menu.js
 const mongoose = require('mongoose');
 
 // 메뉴 스키마 정의
 const menuSchema = new mongoose.Schema({
-
-  // 식당 id 참조 필드
-  restaurantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant', required: true },
 
   // 메뉴 이름
   name: { type: String, required: true },
@@ -33,6 +29,18 @@ const menuSchema = new mongoose.Schema({
 
   // 이미지 URL
   imageUrl: { type: String },
+
+  // 주소
+  address: { type: String },
+
+  // 위치(GeoJSON)
+  location: {
+    type: { type: String, enum: ['Point'], required: true },
+    coordinates: { type: [Number], required: true }
+  },
 });
+
+// GeoJSON 인덱스 설정
+menuSchema.index({ location: '2dsphere' });
 
 module.exports = mongoose.model('Menu', menuSchema);

@@ -10,6 +10,9 @@ class UserRepository {
     return await user.save();
   }
 
+
+  // --- 사용자 조회 메서드 ---
+
   // 이메일로 사용자 찾기
   async findUserByEmail(email) {
     return await User.findOne({ email });
@@ -25,6 +28,14 @@ class UserRepository {
     return await User.findOne({ username });
   }
 
+
+  // --- 사용자 정보 관리 메서드 ---
+
+  // 사용자 이메일 업데이트
+  async updateUserEmail(userId, newEmail) {
+    return await User.findByIdAndUpdate(userId, { email: newEmail }, { new: true });
+  }
+
   // 사용자 비밀번호 업데이트
   async updateUserPassword(userId, newPassword) {
     const user = await this.findUserById(userId);
@@ -35,10 +46,13 @@ class UserRepository {
     return await user.save();
   }
 
-  // 사용자 이메일 업데이트
-  async updateUserEmail(userId, newEmail) {
-    return await User.findByIdAndUpdate(userId, { email: newEmail }, { new: true });
+  // 사용자 삭제
+  async deleteUser(userId) {
+    return await User.findByIdAndDelete(userId);
   }
+
+  
+  // --- 메뉴 관련 메서드 ---
 
   // 사용자에게 메뉴 추가
   async addMenuToUser(userId, menuId) {
@@ -75,10 +89,6 @@ class UserRepository {
     return await User.findById(userId).select('recommendedMenus disrecommendedMenus');
   }
 
-  // 사용자 삭제
-  async deleteUser(userId) {
-    return await User.findByIdAndDelete(userId);
-  }
 }
 
 module.exports = new UserRepository();

@@ -1,19 +1,117 @@
-// backend/routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/user.controller');
 const authMiddleware = require('../middleware/authMiddleware');
 
-// 현재 로그인된 사용자 정보 가져오기
+/**
+ * @swagger
+ * /api/user:
+ *   get:
+ *     tags: [User]
+ *     summary: Get current user information
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Current user data
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
 router.get('/', authMiddleware, UserController.getCurrentUser);
 
-// 비밀번호 변경
+/**
+ * @swagger
+ * /api/user/password:
+ *   put:
+ *     tags: [User]
+ *     summary: Change user password
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       401:
+ *         description: Unauthorized or invalid current password
+ *       500:
+ *         description: Server error
+ */
 router.put('/password', authMiddleware, UserController.changePassword);
 
-// 이메일 변경
+/**
+ * @swagger
+ * /api/user/email:
+ *   put:
+ *     tags: [User]
+ *     summary: Change user email
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newEmail
+ *               - password
+ *             properties:
+ *               newEmail:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Email change request successful
+ *       401:
+ *         description: Unauthorized or invalid password
+ *       500:
+ *         description: Server error
+ */
 router.put('/email', authMiddleware, UserController.changeEmail);
 
-// 계정 삭제
+/**
+ * @swagger
+ * /api/user:
+ *   delete:
+ *     tags: [User]
+ *     summary: Delete user account
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - password
+ *             properties:
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Account deleted successfully
+ *       401:
+ *         description: Unauthorized or invalid password
+ *       500:
+ *         description: Server error
+ */
 router.delete('/', authMiddleware, UserController.deleteAccount);
 
 module.exports = router;

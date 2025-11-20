@@ -1,5 +1,3 @@
-// backend/repositories/menu.repository.js
-
 const Menu = require('../../models/Menu');
 
 class MenuRepository {
@@ -13,11 +11,7 @@ class MenuRepository {
   }
 
   async findAllMenus() {
-    return await Menu.find().populate('restaurantId');
-  }
-
-  async findMenusByRestaurantId(restaurantId) {
-    return await Menu.find({ restaurantId });
+    return await Menu.find();
   }
 
   async updateMenu(menuId, updateData) {
@@ -29,11 +23,15 @@ class MenuRepository {
   }
 
   async searchMenus(query, sortOptions) {
-    return await Menu.find(query).sort(sortOptions).populate('restaurantId');
+    return await Menu.find(query).sort(sortOptions);
   }
 
   async findMenusByUsername(username) {
-    return await Menu.find({ username }).populate('restaurantId');
+    return await Menu.find({ username });
+  }
+
+  async aggregate(pipeline) {
+    return await Menu.aggregate(pipeline);
   }
 
   // 사용자 이름으로 메뉴 삭제

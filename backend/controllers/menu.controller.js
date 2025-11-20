@@ -1,31 +1,17 @@
-// backend/controllers/menu.controller.js
-
 const MenuService = require('../services/menu.service');
 const asyncHandler = require('../utils/asyncHandler');
 const { sendSuccess } = require('../utils/responseHandler');
 
 class MenuController {
-  createMenuForRestaurant = asyncHandler(async (req, res) => {
-    const { restaurantId } = req.params;
+  // This function replaces createMenuWithNewRestaurant
+  createMenu = asyncHandler(async (req, res) => {
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-    const menu = await MenuService.createMenuForRestaurant(restaurantId, req.body, req.user.userId, imageUrl);
-    sendSuccess(res, menu, 201);
-  });
-
-  createMenuWithNewRestaurant = asyncHandler(async (req, res) => {
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-    const menu = await MenuService.createMenuWithNewRestaurant(req.body, req.user.userId, imageUrl);
+    const menu = await MenuService.createMenu(req.body, req.user.userId, imageUrl);
     sendSuccess(res, menu, 201);
   });
 
   getAllMenus = asyncHandler(async (req, res) => {
     const menus = await MenuService.getAllMenus();
-    sendSuccess(res, menus);
-  });
-
-  getMenusByRestaurant = asyncHandler(async (req, res) => {
-    const { restaurantId } = req.params;
-    const menus = await MenuService.getMenusByRestaurant(restaurantId);
     sendSuccess(res, menus);
   });
 

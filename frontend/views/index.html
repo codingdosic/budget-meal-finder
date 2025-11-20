@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="/css/dialog.css">
 </head>
 <body>
+
     <div id="loading-spinner" class="spinner-overlay">
         <div class="spinner"></div>
     </div>
     <div id="toast-container"></div>
+
     <header>
         <h1>Budget Meal Finder</h1>
         <div class="header-buttons">
@@ -23,18 +25,23 @@
     </header>
 
     <main>
+
         <div id="map-container">
             <div id="map"></div>
         </div>
+
         <div id="sidebar">
+
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="메뉴 검색...">
                 <button id="search-button">검색</button>
                 <button id="clear-search-button">X</button>
             </div>
+
             <div id="advanced-search-container">
+
                 <select id="category-select">
-                    <option value="">-- 카테고리 --</option>
+                    <option value="">-- 전체 --</option>
                     <option value="한식">한식</option>
                     <option value="중식">중식</option>
                     <option value="일식">일식</option>
@@ -44,26 +51,34 @@
                     <option value="카페">카페/디저트</option>
                     <option value="기타">기타</option>
                 </select>
+
                 <select id="sort-by-select">
                     <option value="createdAt">최신순</option>
                     <option value="recommendations">추천순</option>
                     <option value="price">낮은 가격순</option>
                 </select>
+
                 <input type="number" id="max-price-input" placeholder="최대 가격">
             </div>
+
             <div id="marker-list"></div>
         </div>
     </main>
 
     <div id="marker-dialog" class="dialog-overlay">
         <div class="dialog-content">
+
             <h2>새 메뉴 추가</h2>
+
             <label for="dialog-title">제목 (식당 이름):</label>
             <input type="text" id="dialog-title" required>
+
             <label for="dialog-description">내용 (메뉴 설명):</label>
             <textarea id="dialog-description"></textarea>
+
             <label for="dialog-price">가격:</label>
             <input type="number" id="dialog-price" required>
+
             <label for="dialog-category">카테고리:</label>
             <select id="dialog-category">
                 <option value="한식">한식</option>
@@ -75,10 +90,12 @@
                 <option value="카페">카페/디저트</option>
                 <option value="기타" selected>기타</option>
             </select>
+
             <label for="dialog-image">이미지:</label>
             <input type="file" id="dialog-image" accept="image/*">
             <p class="hint-text">이곳을 클릭 한 후 이미지를 붙여넣기 하세요</p>
             <div id="image-preview-container"></div>
+            
             <div class="dialog-buttons">
                 <button id="dialog-submit">추가</button>
                 <button id="dialog-cancel">취소</button>

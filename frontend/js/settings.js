@@ -2,7 +2,10 @@
 import * as api from './api.js';
 import { showDialog } from './dialog.js';
 
+// 돔 트리 로드 후 초기화
 document.addEventListener('DOMContentLoaded', () => {
+
+    // 요소 참조
     const usernameInput = document.getElementById('username');
     const emailInput = document.getElementById('email');
     const currentPasswordInput = document.getElementById('current-password');
@@ -22,10 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedUserMenuTitle = document.getElementById('selected-user-menu-title');
     const selectedUserMenusList = document.getElementById('selected-user-menus-list');
 
+    // 현재 사용자 정보 및 선택된 사용자 ID 전역 변수
     let currentUser = null;
-    let selectedUserId = null; // 현재 선택된 사용자 ID 저장
+    let selectedUserId = null; 
 
+    // 설정 페이지 초기화
     async function initialize() {
+
+        // 토큰이 없으면 로그인 페이지로 리디렉션
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = '/views/login.html';
@@ -33,9 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // 1. Fetch user data
+
+            // 사용자 정보 가져오기
             const { data: user } = await api.fetchUser(token);
+
+            // 현재 사용자 갱신
             currentUser = user;
+
+            // 사용자 정보 표시
             displayUserData(currentUser);
 
             // 관리자 패널 표시 여부 결정
@@ -44,39 +56,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 initializeAdminPanel(token);
             }
 
-            // 2. Fetch user's menus
+            // 사용자 등록 메뉴 가져오기
             const { data: menus } = await api.fetchMyMenus(token);
-            displayMyMenus(menus);
+
+            // 메뉴 표시
+            displayUserMenus(menus, myMenusList);
 
         } catch (error) {
             console.error('Error initializing settings page:', error);
+
+            // 토큰이 유효하지 않으면 삭제하고 로그인 페이지로 리디렉션
             localStorage.removeItem('token');
             window.location.href = '/views/login.html';
         }
     }
 
+    // 사용자 정보 표시 함수
     function displayUserData(user) {
         usernameInput.value = user.username;
         emailInput.value = user.email;
     }
 
-    function displayMyMenus(menus) {
-        myMenusList.innerHTML = '';
+    // 사용자 등록 메뉴 표시 함수
+    function displayUserMenus(menus, menusList) {
+        
+        // 메뉴 리스트 초기화
+        menusList.innerHTML = '';
+
+        // 등록한 메뉴가 없을 경우 메시지 표시 
         if (!menus || menus.length === 0) {
-            myMenusList.innerHTML = '<p>아직 등록한 메뉴가 없습니다.</p>';
+            menusList.innerHTML = '<p>등록한 메뉴가 없습니다.</p>';
             return;
         }
 
         menus.forEach(menu => {
-            const item = document.createElement('div');
-            item.className = 'marker-item'; // Reuse styles from main page
 
+            // 메뉴 아이템 생성
+            const item = document.createElement('div');
+
+            // css 클래스 설정
+            item.className = 'marker-item'; 
+
+            // 메뉴 이미지 HTML 생성 (이미지 없으면 빈 div)
             const imageHtml = menu.imageUrl 
                 ? `<img class="marker-item-image" src="${menu.imageUrl}" alt="${menu.name}">` 
                 : '<div class="marker-item-image"></div>';
 
+            // 생성 날짜 포맷팅
             const date = new Date(menu.createdAt).toLocaleDateString();
 
+            // 메뉴 아이템 HTML 설정
             item.innerHTML = `
                 ${imageHtml}
                 <div class="marker-info">
@@ -98,53 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="delete-btn" data-id="${menu._id}">삭제</button>
                 </div>
             `;
-            myMenusList.appendChild(item);
+            // 메뉴 리스트에 아이템 추가
+            menusList.appendChild(item);
         });
     }
 
-    function displaySelectedUserMenus(menus) {
-        selectedUserMenusList.innerHTML = '';
-        if (!menus || menus.length === 0) {
-            selectedUserMenusList.innerHTML = '<p>이 사용자는 등록한 메뉴가 없습니다.</p>';
-            return;
-        }
-
-        menus.forEach(menu => {
-            const item = document.createElement('div');
-            item.className = 'marker-item';
-
-            const imageHtml = menu.imageUrl 
-                ? `<img class="marker-item-image" src="${menu.imageUrl}" alt="${menu.name}">` 
-                : '<div class="marker-item-image"></div>';
-
-            const date = new Date(menu.createdAt).toLocaleDateString();
-
-            item.innerHTML = `
-                ${imageHtml}
-                <div class="marker-info">
-                    <h4>${menu.name}</h4>
-                    <p class="price">${menu.price.toLocaleString()}원</p>
-                    <p class="marker-item-description">${menu.description || '설명 없음'}</p>
-                    <div class="recommend-actions">
-                        <div class="recommend-buttons">
-                            <button class="recommend-btn" disabled>👍</button>
-                            <span class="recommend-count">${menu.recommendations}</span>
-                            <button class="disrecommend-btn" disabled>👎</button>
-                            <span class="disrecommend-count">${menu.disrecommendations}</span>
-                        </div>
-                        <p class="marker-item-date">${date}</p>
-                    </div>
-                </div>
-                <div class="marker-actions">
-                    <button class="edit-btn" data-id="${menu._id}">수정</button>
-                    <button class="delete-btn" data-id="${menu._id}">삭제</button>
-                </div>
-            `;
-            selectedUserMenusList.appendChild(item);
-        });
-    }
-
+    // 관리자 패널 초기화
     function initializeAdminPanel(token) {
+        
         // 초기 사용자 목록 로드
         loadAllUsers(token);
 
@@ -163,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const { data: menus } = await api.getUserMenusAdmin(selectedUserId, token);
                     selectedUserContent.style.display = 'block';
                     selectedUserMenuTitle.textContent = `${username}님의 메뉴`;
-                    displaySelectedUserMenus(menus);
+                    displayUserMenus(menus, selectedUserMenusList);
                 } catch (error) {
                     showDialog({ message: `메뉴를 불러오는 데 실패했습니다: ${error.message}`, title: '오류' });
                 }
@@ -311,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!selectedUserId) return;
         try {
             const { data: menus } = await api.getUserMenusAdmin(selectedUserId, token);
-            displaySelectedUserMenus(menus);
+            displayUserMenus(menus, selectedUserMenusList);
         } catch (error) {
             showDialog({ message: `메뉴를 다시 불러오는 데 실패했습니다: ${error.message}`, title: '오류' });
         }

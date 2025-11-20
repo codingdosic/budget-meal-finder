@@ -1,49 +1,26 @@
-// backend/services/menu.service.js
-
 const MenuRepository = require('../repositories/menu.repository');
-const RestaurantRepository = require('../repositories/restaurant.repository');
 const UserRepository = require('../repositories/user.repository');
 const User = require('../../models/User');
 const ApiError = require('../errors/ApiError');
 
 class MenuService {
-  async createMenuForRestaurant(restaurantId, menuData, userId, imageUrl) {
+  // This function replaces createMenuWithNewRestaurant
+  async createMenu(menuData, userId, imageUrl) {
     const user = await User.findById(userId);
     if (!user) throw new ApiError(404, 'User not found');
 
     const newMenu = await MenuRepository.createMenu({
-      ...menuData,
-      restaurantId,
-      username: user.username,
-      imageUrl,
-    });
-
-    user.menus.push(newMenu._id);
-    await user.save();
-
-    return newMenu;
-  }
-
-  async createMenuWithNewRestaurant(menuData, userId, imageUrl) {
-    const user = await User.findById(userId);
-    if (!user) throw new ApiError(404, 'User not found');
-
-    const restaurant = await RestaurantRepository.createRestaurant({
-      name: `User Added Restaurant - ${menuData.name}`,
-      address: `Lat: ${menuData.lat}, Lon: ${menuData.lon}`,
-      location: { type: 'Point', coordinates: [parseFloat(menuData.lon), parseFloat(menuData.lat)] },
-      category: 'User Added',
-      createdBy: userId,
-    });
-
-    const newMenu = await MenuRepository.createMenu({
-      restaurantId: restaurant._id,
       name: menuData.name,
       price: menuData.price,
       description: menuData.description,
-      username: user.username,
       category: menuData.category,
+      username: user.username,
       imageUrl,
+      location: {
+        type: 'Point',
+        coordinates: [parseFloat(menuData.lon), parseFloat(menuData.lat)]
+      },
+      // address can be added here if provided by frontend in the future
     });
 
     user.menus.push(newMenu._id);
@@ -55,10 +32,6 @@ class MenuService {
   async getAllMenus() {
     const menus = await MenuRepository.findAllMenus();
     return menus.map(this.formatMenu);
-  }
-
-  async getMenusByRestaurant(restaurantId) {
-    return await MenuRepository.findMenusByRestaurantId(restaurantId);
   }
 
   async updateMenu(menuId, updateData, file, userId) {
@@ -78,6 +51,10 @@ class MenuService {
     if (file) {
       updateData.imageUrl = `/uploads/${file.filename}`;
     }
+    
+    // If location is updated, it should be handled here.
+    // For now, assuming location is not updatable from this endpoint.
+
     const updatedMenu = await MenuRepository.updateMenu(menuId, updateData);
     if (!updatedMenu) throw new ApiError(404, 'Menu not found');
     return updatedMenu;
@@ -175,15 +152,17 @@ class MenuService {
   }
 
   formatMenu(menu) {
+    const lat = menu.location && menu.location.coordinates ? menu.location.coordinates[1] : null;
+    const lon = menu.location && menu.location.coordinates ? menu.location.coordinates[0] : null;
+
     return {
       _id: menu._id,
       name: menu.name,
       price: menu.price,
       description: menu.description,
       username: menu.username,
-      restaurantName: menu.restaurantId ? menu.restaurantId.name : 'Unknown Restaurant',
-      lat: menu.restaurantId && menu.restaurantId.location ? menu.restaurantId.location.coordinates[1] : null,
-      lon: menu.restaurantId && menu.restaurantId.location ? menu.restaurantId.location.coordinates[0] : null,
+      lat,
+      lon,
       recommendations: menu.recommendations,
       disrecommendations: menu.disrecommendations,
       imageUrl: menu.imageUrl,

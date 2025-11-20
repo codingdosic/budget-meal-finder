@@ -9,14 +9,20 @@ const path = require('path');
 // DB 연결 함수 모듈
 const connectDB = require('./db/db');
 
+// 에러 처리 미들웨어
+const errorHandler = require('./middleware/errorHandler');
+
 // 라우트 모듈 불러오기
 const authRoutes = require('./routes/authRoutes');
-const restaurantRoutes = require('./routes/restaurantRoutes');
 const menuRoutes = require('./routes/menuRoutes');
 const miscRoutes = require('./routes/miscRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+
+// Swagger
+const swaggerUi = require('swagger-ui-express');
+const specs = require('./swaggerOptions');
 
 // 어플리케이션 인스턴스 생성
 const app = express();
@@ -44,13 +50,12 @@ app.get('/find-credentials', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/views/find-credentials.html'));
 });
 
+// Swagger UI 라우트 연결
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // 라우트 연결
 // 인증 관련: /api/register, /api/login 등
 app.use('/api/auth', authRoutes);
-
-// 식당 관련: /api/restaurants 경로에 라우트 연결
-app.use('/api/restaurants', restaurantRoutes);
 
 // 메뉴 관련: /api/menus 등
 app.use('/api/menus', menuRoutes);
@@ -60,8 +65,6 @@ app.use('/api', miscRoutes);
 app.use('/api', searchRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
-
-const errorHandler = require('./middleware/errorHandler');
 
 // 중앙 에러 처리 미들웨어
 app.use(errorHandler);
