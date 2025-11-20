@@ -36,45 +36,71 @@
 
 ### 주요 화면
 
-- 로그인 / 회원가입 UI  
+### 로그인 / 회원가입 UI  
 
-![로그인](img/img_login.png)
 
-![회원가입](img/img_register.png)
+<img src="img/img_login.png" alt="로그인" width="700"/>
 
-- 메인 화면
 
-![메인 화면](img/img_main.png)
+<img src="img/img_register.png" alt="회원가입" width="700"/>
 
-- 메뉴 등록 화면  
 
-![메뉴 등록](img/img_menu1.png)
+### 메인 화면
 
-![메뉴 등록](img/img_menu2.png)
 
-![메뉴 등록](img/img_menu3.png)
+<img src="img/img_main.png" alt="메인 화면" width="700"/>
 
-- 검색 화면  
 
-![검색 화면](img/img_search1.png)
+### 메뉴 등록 화면  
 
-![검색 화면](img/img_search2.png)
 
-![검색 화면](img/img_search3.png)
+<img src="img/img_menu1.png" alt="메뉴 등록" width="700"/>
 
-![검색 화면](img/img_search4.png)
 
-![검색 화면](img/img_search5.png)
+<img src="img/img_menu2.png" alt="메뉴 등록" width="700"/>
 
-- 사용자 설정
 
-![사용자 설정](img/img_setting1.png) 
+<img src="img/img_menu3.png" alt="메뉴 등록" width="700"/>
 
-![사용자 설정](img/img_setting2.png) 
 
-- Swagger API 문서 화면 
+### 검색 화면  
 
-![시스템 구조도](img/img_swagger.png) 
+
+<img src="img/img_search1.png" alt="검색 화면" width="700"/>
+
+- 카테고리별 검색
+
+<img src="img/img_search2.png" alt="검색 화면" width="700"/>
+
+- 금액별 검색
+
+<img src="img/img_search3.png" alt="검색 화면" width="700"/>
+
+- 키워드별 검색
+
+<img src="img/img_search4.png" alt="검색 화면" width="700"/>
+
+
+<img src="img/img_search5.png" alt="검색 화면" width="700"/>
+
+- 마커 클러스터링
+
+
+### 사용자 설정
+
+
+<img src="img/img_setting1.png" alt="사용자 설정" width="700"/> 
+
+- 일반 사용자 설정 화면. 계정 및 자신이 추가한 메뉴의 관리가 가능.
+
+<img src="img/img_setting2.png" alt="사용자 설정" width="700"/> 
+
+- 관리자 설정 화면에선 위 기본 설정에 더불어 다른 사용자의 검색 및 해당 사용자의 메뉴를 수정/삭제할 수 있다.
+
+### Swagger API 문서 화면 
+
+
+<img src="img/img_swagger.png" alt="swagger" width="700"/> 
 
 ---
 
@@ -100,7 +126,7 @@
 ## 아키텍처
 
 ### 시스템 구조도
-![시스템 구조도](img/diagram.png)
+<img src="img/diagram.png" alt="시스템 구조도" width="700"/>
 
 ### 계층형 구조 (Layered Architecture)
 백엔드는 **관심사 분리(Separation of Concerns)** 원칙에 따라 **핸들러-컨트롤러-서비스-리포지토리**의 계층형 구조로 설계하여 코드의 유지보수성과 테스트 용이성을 향상.
