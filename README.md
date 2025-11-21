@@ -34,6 +34,10 @@
 
 ## 프로젝트 데모
 
+### 데모 링크
+- 애플리케이션: https://budget-meal-finder.onrender.com/
+- API 문서: https://budget-meal-finder.onrender.com/api-docs
+
 ### 주요 화면
 
 ### 로그인 / 회원가입 UI  
@@ -44,6 +48,10 @@
 
 <img src="img/img_register.png" alt="회원가입" width="700"/>
 
+
+<img src="img/img_register_admin.png" alt="관리자 회원가입" width="700"/>
+
+- 관리자 가입 화면. 미리 지정된 보안 코드를 입력해야 계정 등록이 가능.
 
 ### 메인 화면
 
